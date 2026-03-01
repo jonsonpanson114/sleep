@@ -1,0 +1,57 @@
+name: sleep_routine_app
+description: "睡眠・ルーティン習慣化アプリ"
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.11.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+
+  # Local DB
+  drift: ^2.18.0
+
+  # Notifications
+  flutter_local_notifications: ^17.2.2
+  timezone: ^0.9.4
+
+  # State Management
+  flutter_riverpod: ^2.5.1
+
+  # Navigation
+  go_router: ^14.2.0
+
+  # Date/Time
+  intl: ^0.19.0
+
+  # ID Generation
+  uuid: ^4.4.0
+
+  # Animation
+  lottie: ^3.1.2
+
+  # Charts
+  fl_chart: ^0.66.0
+
+  # Japanese Font
+  google_fonts: ^6.2.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+  # Code Generation
+  drift_dev: ^2.18.0
+  riverpod_generator: ^2.4.0
+  build_runner: ^2.4.9
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/lottie/
