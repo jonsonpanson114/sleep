@@ -8,7 +8,7 @@ import '../../providers/routine_provider.dart';
 import '../../providers/streak_provider.dart';
 import '../../providers/message_provider.dart';
 import '../../providers/repository_providers.dart';
-import '../../widgets/streak_badge.dart';
+import '../../widgets/sleep_status_banner.dart';
 import '../../widgets/completion_ring.dart';
 import '../../widgets/condition_toggle.dart';
 import '../../../core/constants.dart';
@@ -31,7 +31,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final morningTasksAsync =
         ref.watch(routineTasksProvider(RoutineType.morning));
     final todayLogAsync = ref.watch(todayLogProvider);
-    final streak = ref.watch(streakProvider);
+    final scoreAsync = ref.watch(sleepScoreProvider);
     final message = ref.watch(messageProvider);
 
     return Scaffold(
@@ -57,10 +57,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ),
               ),
               SliverToBoxAdapter(
-                child: streak.when(
+                child: scoreAsync.when(
                   loading: () => const SizedBox.shrink(),
                   error: (e, _) => const SizedBox.shrink(),
-                  data: (s) => StreakBadge(streak: s),
+                  data: (score) => SleepStatusBanner(sleepScore: score),
                 ),
               ),
               const SliverToBoxAdapter(child: SizedBox(height: 24)),
