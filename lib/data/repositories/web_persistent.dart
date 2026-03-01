@@ -12,13 +12,13 @@ import '../../domain/repositories/achievement_repository.dart';
 
 class WebSettingsPersistent implements SettingsRepository {
   static const _key = 'app_settings';
+  final _controller = StreamController<AppSettings?>.broadcast();
 
   @override
   Future<AppSettings?> getSettings() async {
     final prefs = await SharedPreferences.getInstance();
     final jsonStr = prefs.getString(_key);
     if (jsonStr == null) {
-      // デフォルト設定を返す
       return const AppSettings(
         bedtime: TimeOfDay(hour: 23, minute: 0),
         wakeTime: TimeOfDay(hour: 7, minute: 0),
@@ -51,6 +51,7 @@ class WebSettingsPersistent implements SettingsRepository {
       'offset': settings.bedtimeReminderOffsetMinutes,
     };
     await prefs.setString(_key, jsonEncode(map));
+    _controller.add(settings);
   }
 }
 
@@ -138,7 +139,7 @@ class WebLogPersistent implements LogRepository {
 }
 
 class WebTaskPersistent implements TaskRepository {
-  // Use a hardcoded list for now or expand to persistence if needed
+  final _controller = StreamController<List<RoutineTask>>.broadcast();
   final List<RoutineTask> _defaultTasks = [
     const RoutineTask(id: 'e1', title: 'スマホを置く', type: RoutineType.evening, sortOrder: 0),
     const RoutineTask(id: 'e2', title: 'ストレッチ', type: RoutineType.evening, sortOrder: 1),
@@ -150,7 +151,7 @@ class WebTaskPersistent implements TaskRepository {
   Future<List<RoutineTask>> getAllTasks() async {
     final prefs = await SharedPreferences.getInstance();
     final jsonStr = prefs.getString('routine_tasks');
-    if (jsonStr == null) return _defaultTasks;
+    if (jsonStr == null) return List.from(_defaultTasks);
 
     final List list = jsonDecode(jsonStr);
     return list.map((item) {
@@ -169,6 +170,15 @@ class WebTaskPersistent implements TaskRepository {
     final all = await getAllTasks();
     return all.where((t) => t.type == type).toList();
   }
+
+  Stream<List<RoutineTask>> watchTasksByType(RoutineType type) {
+    Timer.run(() async {
+      final tasks = await getTasksByType(type);
+      _controller.add(tasks);
+    });
+    return _controller.stream.map((list) => list.where((t) => t.type == type).toList());
+  }
+
   @override
   Future<void> addTask(RoutineTask task) async {
     final tasks = await getAllTasks();
@@ -185,7 +195,6 @@ class WebTaskPersistent implements TaskRepository {
 
   @override
   Future<void> reorderTasks(List<RoutineTask> tasks) async {
-    // 渡されたリストをそのまま保存
     await _saveAllTasks(tasks);
   }
 
@@ -198,8 +207,10 @@ class WebTaskPersistent implements TaskRepository {
       'sortOrder': t.sortOrder,
     }).toList();
     await prefs.setString('routine_tasks', jsonEncode(jsonList));
+    _controller.add(tasks); // 監視者に通知
   }
 }
+
 
 class WebAchievementPersistent implements AchievementRepository {
   static const _key = 'unlocked_achievements';

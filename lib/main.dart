@@ -15,6 +15,7 @@ import 'app/router.dart';
 import 'data/database/app_database.dart';
 import 'data/repositories/web_persistent.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:google_fonts/google_fonts.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -66,6 +67,17 @@ class MyApp extends ConsumerWidget {
       theme: AppTheme.darkTheme,
       debugShowCheckedModeBanner: false,
       routerConfig: AppRouter.router,
+      builder: (context, child) {
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(textScaler: TextScaler.noScaling),
+          child: Theme(
+            data: Theme.of(context).copyWith(
+              textTheme: GoogleFonts.notoSansJpTextTheme(Theme.of(context).textTheme),
+            ),
+            child: child!,
+          ),
+        );
+      },
     );
   }
 }

@@ -5,13 +5,20 @@ import '../../domain/repositories/task_repository.dart';
 import '../../domain/repositories/log_repository.dart';
 import '../../domain/use_cases/complete_routine.dart';
 import '../../domain/use_cases/toggle_task.dart';
+import '../../data/repositories/web_persistent.dart';
 import 'repository_providers.dart';
 
 final routineTasksProvider =
-    FutureProvider.autoDispose.family<List<RoutineTask>, RoutineType>(
-        (ref, type) async {
+    StreamProvider.autoDispose.family<List<RoutineTask>, RoutineType>(
+        (ref, type) {
   final repo = ref.watch(taskRepositoryProvider);
-  return repo.getTasksByType(type);
+  
+  if (repo is WebTaskPersistent) {
+    return repo.watchTasksByType(type);
+  }
+  
+  // fallback for native (simple Future to Stream conversion)
+  return Stream.fromFuture(repo.getTasksByType(type));
 });
 
 final todayLogProvider = StreamProvider<DailyLog?>((ref) {
