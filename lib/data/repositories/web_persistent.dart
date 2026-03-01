@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:async';
 import 'package:flutter/material.dart' show TimeOfDay;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../domain/entities/app_settings.dart';
@@ -55,6 +56,7 @@ class WebSettingsPersistent implements SettingsRepository {
 
 class WebLogPersistent implements LogRepository {
   static const _keyPrefix = 'daily_log_';
+  final _controller = StreamController<DailyLog?>.broadcast();
 
   @override
   Future<DailyLog?> getLog(String dateKey) async {
@@ -105,6 +107,12 @@ class WebLogPersistent implements LogRepository {
       'dreamNote': log.dreamNote,
     };
     await prefs.setString('$_keyPrefix$key', jsonEncode(map));
+    
+    // 現在のログが更新されたことを通知
+    final today = DateTime.now();
+    if (log.date.year == today.year && log.date.month == today.month && log.date.day == today.day) {
+      _controller.add(log);
+    }
   }
 
   @override
@@ -119,7 +127,14 @@ class WebLogPersistent implements LogRepository {
   }
 
   @override
-  Stream<DailyLog?> watchTodayLog() => Stream.fromFuture(getTodayLog());
+  Stream<DailyLog?> watchTodayLog() {
+    // 初回データを流しつつ、その後の更新を待機
+    Timer.run(() async {
+      final log = await getTodayLog();
+      _controller.add(log);
+    });
+    return _controller.stream;
+  }
 }
 
 class WebTaskPersistent implements TaskRepository {
@@ -155,18 +170,60 @@ class WebTaskPersistent implements TaskRepository {
     return all.where((t) => t.type == type).toList();
   }
   @override
-  Future<void> addTask(RoutineTask task) async {}
+  Future<void> addTask(RoutineTask task) async {
+    final tasks = await getAllTasks();
+    tasks.add(task);
+    await _saveAllTasks(tasks);
+  }
+
   @override
-  Future<void> deleteTask(String id) async {}
+  Future<void> deleteTask(String id) async {
+    final tasks = await getAllTasks();
+    tasks.removeWhere((t) => t.id == id);
+    await _saveAllTasks(tasks);
+  }
+
   @override
-  Future<void> reorderTasks(List<RoutineTask> tasks) async {}
+  Future<void> reorderTasks(List<RoutineTask> tasks) async {
+    // 渡されたリストをそのまま保存
+    await _saveAllTasks(tasks);
+  }
+
+  Future<void> _saveAllTasks(List<RoutineTask> tasks) async {
+    final prefs = await SharedPreferences.getInstance();
+    final jsonList = tasks.map((t) => {
+      'id': t.id,
+      'title': t.title,
+      'type': t.type.toString(),
+      'sortOrder': t.sortOrder,
+    }).toList();
+    await prefs.setString('routine_tasks', jsonEncode(jsonList));
+  }
 }
 
 class WebAchievementPersistent implements AchievementRepository {
+  static const _key = 'unlocked_achievements';
+
   @override
-  Future<List<String>> getUnlockedAchievementIds() async => [];
+  Future<List<String>> getUnlockedAchievementIds() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getStringList(_key) ?? [];
+  }
+
   @override
-  Future<void> unlockAchievement(String id) async {}
+  Future<void> unlockAchievement(String id) async {
+    final prefs = await SharedPreferences.getInstance();
+    final current = await getUnlockedAchievementIds();
+    if (!current.contains(id)) {
+      current.add(id);
+      await prefs.setStringList(_key, current);
+    }
+  }
+
   @override
-  Future<bool> isUnlocked(String id) async => false;
+  Future<bool> isUnlocked(String id) async {
+    final current = await getUnlockedAchievementIds();
+    return current.contains(id);
+  }
 }
+

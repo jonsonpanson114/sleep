@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../core/constants.dart';
 
 class AppTheme {
   static ThemeData get darkTheme {
+    final baseTheme = ThemeData.dark();
+    final textTheme = GoogleFonts.notoSansJpTextTheme(baseTheme.textTheme);
+
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
@@ -14,45 +18,59 @@ class AppTheme {
       ),
       scaffoldBackgroundColor: AppColors.background,
       cardColor: AppColors.cardBackground,
-      textTheme: TextTheme(
-        bodyLarge: TextStyle(
-          color: AppColors.textPrimary,
-          fontSize: 16,
+      textTheme: textTheme.copyWith(
+        bodyLarge: GoogleFonts.notoSansJp(
+          textStyle: const TextStyle(
+            color: AppColors.textPrimary,
+            fontSize: 16,
+          ),
         ),
-        bodyMedium: TextStyle(
-          color: AppColors.textSecondary,
-          fontSize: 14,
+        bodyMedium: GoogleFonts.notoSansJp(
+          textStyle: const TextStyle(
+            color: AppColors.textSecondary,
+            fontSize: 14,
+          ),
         ),
-        titleLarge: TextStyle(
-          color: AppColors.textPrimary,
-          fontSize: 48,
-          fontWeight: FontWeight.bold,
+        titleLarge: GoogleFonts.notoSansJp(
+          textStyle: const TextStyle(
+            color: AppColors.textPrimary,
+            fontSize: 48,
+            fontWeight: FontWeight.bold,
+          ),
         ),
-        labelLarge: TextStyle(
-          color: AppColors.textPrimary,
-          fontSize: 32,
-          fontWeight: FontWeight.w300,
+        labelLarge: GoogleFonts.notoSansJp(
+          textStyle: const TextStyle(
+            color: AppColors.textPrimary,
+            fontSize: 32,
+            fontWeight: FontWeight.w300,
+          ),
         ),
       ),
       appBarTheme: AppBarTheme(
         backgroundColor: AppColors.background,
         elevation: 0,
-        titleTextStyle: TextStyle(
-          color: AppColors.textPrimary,
-          fontSize: 20,
-          fontWeight: FontWeight.w500,
+        titleTextStyle: GoogleFonts.notoSansJp(
+          textStyle: const TextStyle(
+            color: AppColors.textPrimary,
+            fontSize: 20,
+            fontWeight: FontWeight.w500,
+          ),
         ),
       ),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
         backgroundColor: AppColors.background,
         selectedItemColor: AppColors.accent,
         unselectedItemColor: AppColors.textSecondary,
-        selectedLabelStyle: TextStyle(
-          color: AppColors.accent,
-          fontWeight: FontWeight.w600,
+        selectedLabelStyle: GoogleFonts.notoSansJp(
+          textStyle: const TextStyle(
+            color: AppColors.accent,
+            fontWeight: FontWeight.w600,
+          ),
         ),
-        unselectedLabelStyle: TextStyle(
-          color: AppColors.textSecondary,
+        unselectedLabelStyle: GoogleFonts.notoSansJp(
+          textStyle: const TextStyle(
+            color: AppColors.textSecondary,
+          ),
         ),
         elevation: 0,
       ),
@@ -71,10 +89,12 @@ class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
-          textStyle: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.w600,
-            fontSize: 16,
+          textStyle: GoogleFonts.notoSansJp(
+            textStyle: const TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.w600,
+              fontSize: 16,
+            ),
           ),
         ),
       ),
