@@ -1,0 +1,23 @@
+Analyzing sleep...                                              
+
+warning - Unused import: 'package:flutter/material.dart' - lib\app\router.dart:1:8 - unused_import
+   info - The imported package 'path_provider' isn't a dependency of the importing package - lib\data\database\connection\native.dart:4:8 - depend_on_referenced_packages
+   info - The imported package 'path' isn't a dependency of the importing package - lib\data\database\connection\native.dart:5:8 - depend_on_referenced_packages
+  error - Missing concrete implementations of 'QueryExecutor.beginExclusive' and 'getter QueryExecutor.dialect' - lib\data\database\connection\web.dart:11:7 - non_abstract_class_inherits_abstract_member
+warning - The value of the field '_data' isn't used - lib\data\database\connection\web.dart:12:49 - unused_field
+  error - Undefined class 'QueryItems' - lib\data\database\connection\web.dart:15:27 - undefined_class
+  error - Missing concrete implementations of 'QueryExecutor.beginExclusive', 'QueryExecutor.beginTransaction', 'QueryExecutor.ensureOpen', 'getter QueryExecutor.dialect', and 1 more - lib\data\database\connection\web.dart:49:7 - non_abstract_class_inherits_abstract_member
+warning - Unused import: 'package:drift/drift.dart' - lib\data\repositories\achievement_repository_impl.dart:1:8 - unused_import
+warning - Unused import: '../../core/date_utils.dart' - lib\domain\use_cases\calculate_streak.dart:2:8 - unused_import
+warning - The '!' will have no effect because the receiver can't be null - lib\domain\use_cases\generate_weekly_report.dart:96:44 - unnecessary_non_null_assertion
+warning - The '!' will have no effect because the receiver can't be null - lib\domain\use_cases\generate_weekly_report.dart:97:44 - unnecessary_non_null_assertion
+warning - Unused import: 'package:go_router/go_router.dart' - lib\presentation\screens\edit_routine\edit_routine_screen.dart:2:8 - unused_import
+warning - The value of the local variable 'borderColor' isn't used - lib\presentation\widgets\badge_tile.dart:17:11 - unused_local_variable
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\badge_tile.dart:56:50 - deprecated_member_use
+warning - The value of the local variable 'isSelected' isn't used - lib\presentation\widgets\condition_toggle.dart:43:11 - unused_local_variable
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\condition_toggle.dart:56:45 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\condition_toggle.dart:81:76 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\insight_card.dart:26:34 - deprecated_member_use
+warning - The value of the local variable 'picked' isn't used - lib\presentation\widgets\time_picker_tile.dart:18:11 - unused_local_variable
+
+19 issues found. (ran in 4.5s)

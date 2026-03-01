@@ -7,9 +7,7 @@ import '../database/app_database.dart';
 class SettingsRepositoryImpl implements SettingsRepository {
   final AppDatabase db;
 
-  SettingsRepositoryImpl() : db = AppDatabase() {
-    db.seedDefaultData();
-  }
+  SettingsRepositoryImpl(this.db);
 
   @override
   Future<AppSettings?> getSettings() async {

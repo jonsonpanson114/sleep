@@ -9,7 +9,7 @@ import '../database/app_database.dart';
 class LogRepositoryImpl implements LogRepository {
   final AppDatabase db;
 
-  LogRepositoryImpl() : db = AppDatabase();
+  LogRepositoryImpl(this.db);
 
   @override
   Future<DailyLog?> getLog(String dateKey) async {
@@ -43,6 +43,7 @@ class LogRepositoryImpl implements LogRepository {
             napTaken: Value(log.napTaken),
             daytimeSleepiness: Value(log.daytimeSleepiness),
             feltIrritable: Value(log.feltIrritable),
+            dreamNote: Value(log.dreamNote),
           ));
     } else {
       await (db.update(db.logsTable)
@@ -56,6 +57,7 @@ class LogRepositoryImpl implements LogRepository {
         napTaken: Value(log.napTaken),
         daytimeSleepiness: Value(log.daytimeSleepiness),
         feltIrritable: Value(log.feltIrritable),
+        dreamNote: Value(log.dreamNote),
       ));
     }
   }
@@ -105,6 +107,7 @@ class LogRepositoryImpl implements LogRepository {
       napTaken: log.napTaken,
       daytimeSleepiness: log.daytimeSleepiness,
       feltIrritable: log.feltIrritable,
+      dreamNote: log.dreamNote,
     );
   }
 }

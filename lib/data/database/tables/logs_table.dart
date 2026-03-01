@@ -11,6 +11,7 @@ class LogsTable extends Table {
   BoolColumn get napTaken => boolean().nullable()();
   BoolColumn get daytimeSleepiness => boolean().nullable()();
   BoolColumn get feltIrritable => boolean().nullable()();
+  TextColumn get dreamNote => text().nullable()();
 
   @override
   Set<Column> get primaryKey => {dateKey};

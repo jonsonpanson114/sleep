@@ -6,7 +6,7 @@ import '../database/app_database.dart';
 class TaskRepositoryImpl implements TaskRepository {
   final AppDatabase db;
 
-  TaskRepositoryImpl() : db = AppDatabase();
+  TaskRepositoryImpl(this.db);
 
   @override
   Future<List<RoutineTask>> getAllTasks() async {

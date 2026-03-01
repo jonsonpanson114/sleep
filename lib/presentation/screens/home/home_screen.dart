@@ -153,20 +153,44 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               answered: log?.daytimeSleepiness != null,
                               onChanged: (v) => _saveCondition(sleepiness: v),
                             ),
-                            ConditionToggle(
-                              label: 'イライラした？',
-                              emoji: '😤',
-                              value: log?.feltIrritable,
-                              answered: log?.feltIrritable != null,
-                              onChanged: (v) => _saveCondition(irritability: v),
-                            ),
-                          ],
+                              ConditionToggle(
+                                label: 'イライラした？',
+                                emoji: '😤',
+                                value: log?.feltIrritable,
+                                answered: log?.feltIrritable != null,
+                                onChanged: (v) => _saveCondition(irritability: v),
+                              ),
+                              const SizedBox(height: 16),
+                              const Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text('夢メモ',
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        color: AppColors.textSecondary)),
+                              ),
+                              const SizedBox(height: 8),
+                              TextField(
+                                decoration: InputDecoration(
+                                  hintText: 'どんな夢を見た？（覚えている範囲でな）',
+                                  hintStyle: const TextStyle(fontSize: 14),
+                                  filled: true,
+                                  fillColor: AppColors.cardBackground,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    borderSide: BorderSide.none,
+                                  ),
+                                ),
+                                maxLines: 2,
+                                controller: TextEditingController(text: log?.dreamNote),
+                                onSubmitted: (v) => _saveCondition(dreamNote: v),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ),
               const SliverToBoxAdapter(child: SizedBox(height: 24)),
             ],
           );
@@ -270,8 +294,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
-  Future<void> _saveCondition(
-      {bool? napTaken, bool? sleepiness, bool? irritability}) async {
+   Future<void> _saveCondition(
+      {bool? napTaken, bool? sleepiness, bool? irritability, String? dreamNote}) async {
     final logRepo = ref.read(logRepositoryProvider);
     final existing = await logRepo.getTodayLog();
     final log = existing ?? DailyLog(date: DateTime.now());
@@ -279,6 +303,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       napTaken: napTaken ?? log.napTaken,
       daytimeSleepiness: sleepiness ?? log.daytimeSleepiness,
       feltIrritable: irritability ?? log.feltIrritable,
+      dreamNote: dreamNote ?? log.dreamNote,
     );
     await logRepo.saveLog(updated);
   }

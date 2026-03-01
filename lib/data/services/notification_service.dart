@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart' show TimeOfDay;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -13,6 +14,7 @@ class NotificationService {
 
   /// 初期化・権限リクエスト
   static Future<void> init() async {
+    if (kIsWeb) return;
     if (_initialized) return;
 
     const androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
@@ -43,6 +45,7 @@ class NotificationService {
     TimeOfDay time,
     int offsetMinutes,
   ) async {
+    if (kIsWeb) return;
     if (!_initialized) await init();
 
     final now = DateTime.now();
@@ -89,6 +92,7 @@ class NotificationService {
 
   /// 起床アラームをスケジュール
   static Future<void> scheduleWakeAlarm(TimeOfDay time) async {
+    if (kIsWeb) return;
     if (!_initialized) await init();
 
     final now = DateTime.now();
@@ -139,6 +143,7 @@ class NotificationService {
 
   /// 設定に応じて全通知を再スケジュール
   static Future<void> rescheduleAll(AppSettings settings) async {
+    if (kIsWeb) return;
     await cancelAll();
 
     if (settings.bedtimeNotificationEnabled) {

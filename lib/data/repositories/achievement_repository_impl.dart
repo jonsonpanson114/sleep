@@ -5,7 +5,7 @@ import '../database/app_database.dart';
 class AchievementRepositoryImpl implements AchievementRepository {
   final AppDatabase db;
 
-  AchievementRepositoryImpl() : db = AppDatabase();
+  AchievementRepositoryImpl(this.db);
 
   @override
   Future<List<String>> getUnlockedAchievementIds() async {

@@ -973,6 +973,17 @@ class $LogsTableTable extends LogsTable with TableInfo<$LogsTableTable, Log> {
       'CHECK ("felt_irritable" IN (0, 1))',
     ),
   );
+  static const VerificationMeta _dreamNoteMeta = const VerificationMeta(
+    'dreamNote',
+  );
+  @override
+  late final GeneratedColumn<String> dreamNote = GeneratedColumn<String>(
+    'dream_note',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     dateKey,
@@ -984,6 +995,7 @@ class $LogsTableTable extends LogsTable with TableInfo<$LogsTableTable, Log> {
     napTaken,
     daytimeSleepiness,
     feltIrritable,
+    dreamNote,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -1076,6 +1088,12 @@ class $LogsTableTable extends LogsTable with TableInfo<$LogsTableTable, Log> {
         ),
       );
     }
+    if (data.containsKey('dream_note')) {
+      context.handle(
+        _dreamNoteMeta,
+        dreamNote.isAcceptableOrUnknown(data['dream_note']!, _dreamNoteMeta),
+      );
+    }
     return context;
   }
 
@@ -1121,6 +1139,10 @@ class $LogsTableTable extends LogsTable with TableInfo<$LogsTableTable, Log> {
         DriftSqlType.bool,
         data['${effectivePrefix}felt_irritable'],
       ),
+      dreamNote: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}dream_note'],
+      ),
     );
   }
 
@@ -1140,6 +1162,7 @@ class Log extends DataClass implements Insertable<Log> {
   final bool? napTaken;
   final bool? daytimeSleepiness;
   final bool? feltIrritable;
+  final String? dreamNote;
   const Log({
     required this.dateKey,
     required this.completedTaskIds,
@@ -1150,6 +1173,7 @@ class Log extends DataClass implements Insertable<Log> {
     this.napTaken,
     this.daytimeSleepiness,
     this.feltIrritable,
+    this.dreamNote,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -1172,6 +1196,9 @@ class Log extends DataClass implements Insertable<Log> {
     }
     if (!nullToAbsent || feltIrritable != null) {
       map['felt_irritable'] = Variable<bool>(feltIrritable);
+    }
+    if (!nullToAbsent || dreamNote != null) {
+      map['dream_note'] = Variable<String>(dreamNote);
     }
     return map;
   }
@@ -1197,6 +1224,9 @@ class Log extends DataClass implements Insertable<Log> {
       feltIrritable: feltIrritable == null && nullToAbsent
           ? const Value.absent()
           : Value(feltIrritable),
+      dreamNote: dreamNote == null && nullToAbsent
+          ? const Value.absent()
+          : Value(dreamNote),
     );
   }
 
@@ -1219,6 +1249,7 @@ class Log extends DataClass implements Insertable<Log> {
       napTaken: serializer.fromJson<bool?>(json['napTaken']),
       daytimeSleepiness: serializer.fromJson<bool?>(json['daytimeSleepiness']),
       feltIrritable: serializer.fromJson<bool?>(json['feltIrritable']),
+      dreamNote: serializer.fromJson<String?>(json['dreamNote']),
     );
   }
   @override
@@ -1234,6 +1265,7 @@ class Log extends DataClass implements Insertable<Log> {
       'napTaken': serializer.toJson<bool?>(napTaken),
       'daytimeSleepiness': serializer.toJson<bool?>(daytimeSleepiness),
       'feltIrritable': serializer.toJson<bool?>(feltIrritable),
+      'dreamNote': serializer.toJson<String?>(dreamNote),
     };
   }
 
@@ -1247,6 +1279,7 @@ class Log extends DataClass implements Insertable<Log> {
     Value<bool?> napTaken = const Value.absent(),
     Value<bool?> daytimeSleepiness = const Value.absent(),
     Value<bool?> feltIrritable = const Value.absent(),
+    Value<String?> dreamNote = const Value.absent(),
   }) => Log(
     dateKey: dateKey ?? this.dateKey,
     completedTaskIds: completedTaskIds ?? this.completedTaskIds,
@@ -1265,6 +1298,7 @@ class Log extends DataClass implements Insertable<Log> {
     feltIrritable: feltIrritable.present
         ? feltIrritable.value
         : this.feltIrritable,
+    dreamNote: dreamNote.present ? dreamNote.value : this.dreamNote,
   );
   Log copyWithCompanion(LogsTableCompanion data) {
     return Log(
@@ -1291,6 +1325,7 @@ class Log extends DataClass implements Insertable<Log> {
       feltIrritable: data.feltIrritable.present
           ? data.feltIrritable.value
           : this.feltIrritable,
+      dreamNote: data.dreamNote.present ? data.dreamNote.value : this.dreamNote,
     );
   }
 
@@ -1305,7 +1340,8 @@ class Log extends DataClass implements Insertable<Log> {
           ..write('morningCompletedAt: $morningCompletedAt, ')
           ..write('napTaken: $napTaken, ')
           ..write('daytimeSleepiness: $daytimeSleepiness, ')
-          ..write('feltIrritable: $feltIrritable')
+          ..write('feltIrritable: $feltIrritable, ')
+          ..write('dreamNote: $dreamNote')
           ..write(')'))
         .toString();
   }
@@ -1321,6 +1357,7 @@ class Log extends DataClass implements Insertable<Log> {
     napTaken,
     daytimeSleepiness,
     feltIrritable,
+    dreamNote,
   );
   @override
   bool operator ==(Object other) =>
@@ -1334,7 +1371,8 @@ class Log extends DataClass implements Insertable<Log> {
           other.morningCompletedAt == this.morningCompletedAt &&
           other.napTaken == this.napTaken &&
           other.daytimeSleepiness == this.daytimeSleepiness &&
-          other.feltIrritable == this.feltIrritable);
+          other.feltIrritable == this.feltIrritable &&
+          other.dreamNote == this.dreamNote);
 }
 
 class LogsTableCompanion extends UpdateCompanion<Log> {
@@ -1347,6 +1385,7 @@ class LogsTableCompanion extends UpdateCompanion<Log> {
   final Value<bool?> napTaken;
   final Value<bool?> daytimeSleepiness;
   final Value<bool?> feltIrritable;
+  final Value<String?> dreamNote;
   final Value<int> rowid;
   const LogsTableCompanion({
     this.dateKey = const Value.absent(),
@@ -1358,6 +1397,7 @@ class LogsTableCompanion extends UpdateCompanion<Log> {
     this.napTaken = const Value.absent(),
     this.daytimeSleepiness = const Value.absent(),
     this.feltIrritable = const Value.absent(),
+    this.dreamNote = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   LogsTableCompanion.insert({
@@ -1370,6 +1410,7 @@ class LogsTableCompanion extends UpdateCompanion<Log> {
     this.napTaken = const Value.absent(),
     this.daytimeSleepiness = const Value.absent(),
     this.feltIrritable = const Value.absent(),
+    this.dreamNote = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : dateKey = Value(dateKey),
        completedTaskIds = Value(completedTaskIds);
@@ -1383,6 +1424,7 @@ class LogsTableCompanion extends UpdateCompanion<Log> {
     Expression<bool>? napTaken,
     Expression<bool>? daytimeSleepiness,
     Expression<bool>? feltIrritable,
+    Expression<String>? dreamNote,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -1397,6 +1439,7 @@ class LogsTableCompanion extends UpdateCompanion<Log> {
       if (napTaken != null) 'nap_taken': napTaken,
       if (daytimeSleepiness != null) 'daytime_sleepiness': daytimeSleepiness,
       if (feltIrritable != null) 'felt_irritable': feltIrritable,
+      if (dreamNote != null) 'dream_note': dreamNote,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -1411,6 +1454,7 @@ class LogsTableCompanion extends UpdateCompanion<Log> {
     Value<bool?>? napTaken,
     Value<bool?>? daytimeSleepiness,
     Value<bool?>? feltIrritable,
+    Value<String?>? dreamNote,
     Value<int>? rowid,
   }) {
     return LogsTableCompanion(
@@ -1423,6 +1467,7 @@ class LogsTableCompanion extends UpdateCompanion<Log> {
       napTaken: napTaken ?? this.napTaken,
       daytimeSleepiness: daytimeSleepiness ?? this.daytimeSleepiness,
       feltIrritable: feltIrritable ?? this.feltIrritable,
+      dreamNote: dreamNote ?? this.dreamNote,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -1461,6 +1506,9 @@ class LogsTableCompanion extends UpdateCompanion<Log> {
     if (feltIrritable.present) {
       map['felt_irritable'] = Variable<bool>(feltIrritable.value);
     }
+    if (dreamNote.present) {
+      map['dream_note'] = Variable<String>(dreamNote.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -1479,6 +1527,7 @@ class LogsTableCompanion extends UpdateCompanion<Log> {
           ..write('napTaken: $napTaken, ')
           ..write('daytimeSleepiness: $daytimeSleepiness, ')
           ..write('feltIrritable: $feltIrritable, ')
+          ..write('dreamNote: $dreamNote, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -2165,6 +2214,7 @@ typedef $$LogsTableTableCreateCompanionBuilder =
       Value<bool?> napTaken,
       Value<bool?> daytimeSleepiness,
       Value<bool?> feltIrritable,
+      Value<String?> dreamNote,
       Value<int> rowid,
     });
 typedef $$LogsTableTableUpdateCompanionBuilder =
@@ -2178,6 +2228,7 @@ typedef $$LogsTableTableUpdateCompanionBuilder =
       Value<bool?> napTaken,
       Value<bool?> daytimeSleepiness,
       Value<bool?> feltIrritable,
+      Value<String?> dreamNote,
       Value<int> rowid,
     });
 
@@ -2232,6 +2283,11 @@ class $$LogsTableTableFilterComposer
 
   ColumnFilters<bool> get feltIrritable => $composableBuilder(
     column: $table.feltIrritable,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get dreamNote => $composableBuilder(
+    column: $table.dreamNote,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -2289,6 +2345,11 @@ class $$LogsTableTableOrderingComposer
     column: $table.feltIrritable,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get dreamNote => $composableBuilder(
+    column: $table.dreamNote,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$LogsTableTableAnnotationComposer
@@ -2340,6 +2401,9 @@ class $$LogsTableTableAnnotationComposer
     column: $table.feltIrritable,
     builder: (column) => column,
   );
+
+  GeneratedColumn<String> get dreamNote =>
+      $composableBuilder(column: $table.dreamNote, builder: (column) => column);
 }
 
 class $$LogsTableTableTableManager
@@ -2379,6 +2443,7 @@ class $$LogsTableTableTableManager
                 Value<bool?> napTaken = const Value.absent(),
                 Value<bool?> daytimeSleepiness = const Value.absent(),
                 Value<bool?> feltIrritable = const Value.absent(),
+                Value<String?> dreamNote = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => LogsTableCompanion(
                 dateKey: dateKey,
@@ -2390,6 +2455,7 @@ class $$LogsTableTableTableManager
                 napTaken: napTaken,
                 daytimeSleepiness: daytimeSleepiness,
                 feltIrritable: feltIrritable,
+                dreamNote: dreamNote,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -2403,6 +2469,7 @@ class $$LogsTableTableTableManager
                 Value<bool?> napTaken = const Value.absent(),
                 Value<bool?> daytimeSleepiness = const Value.absent(),
                 Value<bool?> feltIrritable = const Value.absent(),
+                Value<String?> dreamNote = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => LogsTableCompanion.insert(
                 dateKey: dateKey,
@@ -2414,6 +2481,7 @@ class $$LogsTableTableTableManager
                 napTaken: napTaken,
                 daytimeSleepiness: daytimeSleepiness,
                 feltIrritable: feltIrritable,
+                dreamNote: dreamNote,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0

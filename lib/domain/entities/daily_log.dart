@@ -8,6 +8,7 @@ class DailyLog {
   final bool? napTaken;
   final bool? daytimeSleepiness;
   final bool? feltIrritable;
+  final String? dreamNote;
 
   const DailyLog({
     required this.date,
@@ -17,8 +18,9 @@ class DailyLog {
     this.eveningCompletedAt,
     this.morningCompletedAt,
     this.napTaken,
-    this.daytimeSleepiness,
+     this.daytimeSleepiness,
     this.feltIrritable,
+    this.dreamNote,
   });
 
   DailyLog copyWith({
@@ -29,8 +31,9 @@ class DailyLog {
     DateTime? eveningCompletedAt,
     DateTime? morningCompletedAt,
     bool? napTaken,
-    bool? daytimeSleepiness,
+     bool? daytimeSleepiness,
     bool? feltIrritable,
+    String? dreamNote,
   }) {
     return DailyLog(
       date: date ?? this.date,
@@ -40,8 +43,9 @@ class DailyLog {
       eveningCompletedAt: eveningCompletedAt ?? this.eveningCompletedAt,
       morningCompletedAt: morningCompletedAt ?? this.morningCompletedAt,
       napTaken: napTaken ?? this.napTaken,
-      daytimeSleepiness: daytimeSleepiness ?? this.daytimeSleepiness,
+       daytimeSleepiness: daytimeSleepiness ?? this.daytimeSleepiness,
       feltIrritable: feltIrritable ?? this.feltIrritable,
+      dreamNote: dreamNote ?? this.dreamNote,
     );
   }
 }
