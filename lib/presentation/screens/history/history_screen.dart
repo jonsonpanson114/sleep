@@ -1,181 +1,230 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/streak_provider.dart';
-import '../../providers/routine_provider.dart';
+import '../../providers/missions_provider.dart';
 import '../../providers/repository_providers.dart';
+import '../../widgets/stamp_calendar.dart';
+import '../../widgets/mission_card.dart';
 import '../../../domain/entities/daily_log.dart';
 import '../../../core/constants.dart';
 
-class HistoryScreen extends ConsumerWidget {
+class HistoryScreen extends ConsumerStatefulWidget {
   const HistoryScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final streak = ref.watch(streakProvider);
-    final maxStreak = ref.watch(longestStreakProvider);
-    final todayLogAsync = ref.watch(todayLogProvider);
+  ConsumerState<HistoryScreen> createState() => _HistoryScreenState();
+}
+
+class _HistoryScreenState extends ConsumerState<HistoryScreen>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final streakAsync = ref.watch(streakProvider);
+    final maxStreakAsync = ref.watch(longestStreakProvider);
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('履歴'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            // ストリークカード
-            Card(
-              color: AppColors.cardBackground,
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  children: [
-                    Text(
-                      '現在ストリーク',
-                      style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
-                    ),
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        const Icon(Icons.local_fire_department, color: AppColors.accent, size: 32),
-                        const SizedBox(width: 8),
-                        Text(
-                          '${streak.value ?? 0} 日',
-                          style: TextStyle(
-                            fontSize: 32,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.textPrimary,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            // 最長ストリーク
-            Card(
-              color: AppColors.cardBackground,
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  children: [
-                    Text(
-                      '最長ストリーク',
-                      style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
-                    ),
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        const Icon(Icons.emoji_events, color: AppColors.badgeUnlocked, size: 32),
-                        const SizedBox(width: 8),
-                        Text(
-                          '${maxStreak.value ?? 0} 日',
-                          style: TextStyle(
-                            fontSize: 32,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.badgeUnlocked,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 24),
-            Text(
-              '過去30日',
-              style: TextStyle(fontSize: 14, color: AppColors.textSecondary),
-            ),
-            const SizedBox(height: 8),
-            Expanded(
-              child: todayLogAsync.when(
-                loading: () => const Center(child: CircularProgressIndicator()),
-                error: (err, st) => Center(child: Text('エラー: $err')),
-                data: (todayLog) {
-                  // 過去30日を取得（今日を除く）
-                  final todayKey = DateFormat('yyyy-MM-dd').format(DateTime.now());
-                  return FutureBuilder<List<DailyLog>>(
-                    future: ref.read(logRepositoryProvider).getRecentLogs(31),
-                    builder: (context, snapshot) {
-                      if (!snapshot.hasData) {
-                        return const Center(child: CircularProgressIndicator());
-                      }
-
-                      final logs = snapshot.data!;
-                      // 今日を除いてソート
-                      final filteredLogs = logs
-                          .where((log) => DateFormat('yyyy-MM-dd').format(log.date) != todayKey)
-                          .toList()
-                        ..sort((a, b) => b.date.compareTo(a.date));
-
-                      if (filteredLogs.isEmpty) {
-                        return const Center(child: Text('履歴がありません'));
-                      }
-
-                      return ListView.builder(
-                        itemCount: filteredLogs.length,
-                        itemBuilder: (context, index) {
-                          final log = filteredLogs[index];
-                          return Card(
-                            color: AppColors.cardBackground,
-                            child: ListTile(
-                              leading: _buildLeadingIcon(log),
-                              title: Text(
-                                DateFormat('MM/dd').format(log.date),
-                                style: TextStyle(
-                                  color: AppColors.textPrimary,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              subtitle: Row(
-                                children: [
-                                  _buildStatusIcon('evening', log.eveningCompleted, log.eveningCompletedAt),
-                                  const SizedBox(width: 8),
-                                  _buildStatusIcon('morning', log.morningCompleted, log.morningCompletedAt),
-                                  const SizedBox(width: 8),
-                                  if (log.napTaken == true) const Text('💤', style: TextStyle(fontSize: 16)),
-                                  if (log.daytimeSleepiness == true) const Text('😪', style: TextStyle(fontSize: 16)),
-                                  if (log.feltIrritable == true) const Text('😤', style: TextStyle(fontSize: 16)),
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                    },
-                  );
-                },
-              ),
-            ),
+        bottom: TabBar(
+          controller: _tabController,
+          tabs: const [
+            Tab(icon: Icon(Icons.calendar_month), text: 'スタンプ'),
+            Tab(icon: Icon(Icons.flag), text: 'ミッション'),
           ],
+          labelColor: AppColors.accent,
+          unselectedLabelColor: AppColors.textSecondary,
+          indicatorColor: AppColors.accent,
         ),
+      ),
+      body: Column(
+        children: [
+          // ストリーク情報バー
+          Container(
+            margin: const EdgeInsets.all(16),
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+            decoration: BoxDecoration(
+              color: AppColors.cardBackground,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                streakAsync.when(
+                  loading: () => const _StatItem(label: '現在', value: '-', emoji: '🔥'),
+                  error: (_, __) => const _StatItem(label: '現在', value: '0', emoji: '🔥'),
+                  data: (s) => _StatItem(label: '現在の連続', value: '$s日', emoji: '🔥'),
+                ),
+                const VerticalDivider(color: AppColors.textSecondary),
+                maxStreakAsync.when(
+                  loading: () => const _StatItem(label: '最高記録', value: '-', emoji: '🏆'),
+                  error: (_, __) => const _StatItem(label: '最高記録', value: '0', emoji: '🏆'),
+                  data: (s) => _StatItem(label: '最高記録', value: '$s日', emoji: '🏆'),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
+              children: [
+                // タブ1: スタンプカレンダー
+                _CalendarTab(),
+                // タブ2: ミッション
+                _MissionsTab(),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
+}
 
-  Widget _buildLeadingIcon(DailyLog log) {
-    if (log.eveningCompleted && log.morningCompleted) {
-      return const Icon(Icons.check_circle, color: AppColors.success, size: 28);
-    }
-    return const Icon(Icons.radio_button_unchecked, color: AppColors.textSecondary, size: 28);
+class _StatItem extends StatelessWidget {
+  final String label;
+  final String value;
+  final String emoji;
+
+  const _StatItem({
+    required this.label,
+    required this.value,
+    required this.emoji,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(emoji, style: const TextStyle(fontSize: 22)),
+        const SizedBox(height: 2),
+        Text(
+          value,
+          style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: AppColors.textPrimary),
+        ),
+        Text(label,
+            style: const TextStyle(
+                fontSize: 11, color: AppColors.textSecondary)),
+      ],
+    );
   }
+}
 
-  Widget _buildStatusIcon(String label, bool completed, DateTime? completedAt) {
-    if (completed) {
-      return Icon(
-        label == 'evening' ? Icons.nightlight_round : Icons.wb_sunny,
-        color: AppColors.success,
-        size: 20,
-      );
-    }
-    return Icon(
-      label == 'evening' ? Icons.nightlight_outlined : Icons.wb_sunny_outlined,
-      color: AppColors.textSecondary,
-      size: 20,
+class _CalendarTab extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return FutureBuilder<List<DailyLog>>(
+      future: ref.read(logRepositoryProvider).getRecentLogs(90),
+      builder: (context, snapshot) {
+        final logs = snapshot.data ?? [];
+        return SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: Column(
+            children: [
+              StampCalendar(logs: logs),
+              const SizedBox(height: 32),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _MissionsTab extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final missionsAsync = ref.watch(weeklyMissionsProvider);
+
+    return missionsAsync.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (e, _) => Center(child: Text('エラー: $e')),
+      data: (missions) {
+        final completed = missions.where((m) => m.isCompleted).length;
+        final total = missions.length;
+        return ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            // 今週の進捗サマリー
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    AppColors.accent.withOpacity(0.15),
+                    AppColors.primary.withOpacity(0.15),
+                  ],
+                ),
+                borderRadius: BorderRadius.circular(16),
+                border:
+                    Border.all(color: AppColors.accent.withOpacity(0.3)),
+              ),
+              child: Row(
+                children: [
+                  Text(
+                    '$completed/$total',
+                    style: const TextStyle(
+                      fontSize: 36,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.accent,
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          '今週のミッション達成',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.textPrimary,
+                              fontSize: 15),
+                        ),
+                        const SizedBox(height: 6),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(6),
+                          child: LinearProgressIndicator(
+                            value: total > 0 ? completed / total : 0,
+                            minHeight: 8,
+                            backgroundColor:
+                                AppColors.cardBackground,
+                            valueColor: const AlwaysStoppedAnimation<Color>(
+                                AppColors.accent),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+            // ミッション一覧
+            ...missions.map((m) => Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: MissionCard(mission: m),
+                )),
+            const SizedBox(height: 32),
+          ],
+        );
+      },
     );
   }
 }
