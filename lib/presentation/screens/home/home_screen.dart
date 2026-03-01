@@ -9,6 +9,7 @@ import '../../providers/streak_provider.dart';
 import '../../providers/message_provider.dart';
 import '../../providers/repository_providers.dart';
 import '../../widgets/sleep_status_banner.dart';
+import '../../widgets/saito_daily_card.dart';
 import '../../widgets/completion_ring.dart';
 import '../../widgets/condition_toggle.dart';
 import '../../../core/constants.dart';
@@ -63,7 +64,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   data: (score) => SleepStatusBanner(sleepScore: score),
                 ),
               ),
-              const SliverToBoxAdapter(child: SizedBox(height: 24)),
+              const SliverToBoxAdapter(child: SaitoDailyCard()),
+              const SliverToBoxAdapter(child: SizedBox(height: 16)),
               SliverToBoxAdapter(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
