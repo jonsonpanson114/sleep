@@ -13,9 +13,8 @@ import 'presentation/providers/repository_providers.dart';
 import 'app/theme.dart';
 import 'app/router.dart';
 import 'data/database/app_database.dart';
-
+import 'data/repositories/web_persistent.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'data/repositories/web_mocks.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,10 +26,10 @@ void main() async {
   late AchievementRepository achievementRepo;
 
   if (kIsWeb) {
-    settingsRepo = WebSettingsMock();
-    taskRepo = WebTaskMock();
-    logRepo = WebLogMock();
-    achievementRepo = WebAchievementMock();
+    settingsRepo = WebSettingsPersistent();
+    taskRepo = WebTaskPersistent();
+    logRepo = WebLogPersistent();
+    achievementRepo = WebAchievementPersistent();
   } else {
     final db = AppDatabase();
     try {
