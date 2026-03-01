@@ -16,7 +16,16 @@ class WebSettingsPersistent implements SettingsRepository {
   Future<AppSettings?> getSettings() async {
     final prefs = await SharedPreferences.getInstance();
     final jsonStr = prefs.getString(_key);
-    if (jsonStr == null) return null;
+    if (jsonStr == null) {
+      // デフォルト設定を返す
+      return const AppSettings(
+        bedtime: TimeOfDay(hour: 23, minute: 0),
+        wakeTime: TimeOfDay(hour: 7, minute: 0),
+        bedtimeNotificationEnabled: true,
+        wakeNotificationEnabled: true,
+        bedtimeReminderOffsetMinutes: 30,
+      );
+    }
 
     final map = jsonDecode(jsonStr) as Map<String, dynamic>;
     return AppSettings(
@@ -115,10 +124,36 @@ class WebLogPersistent implements LogRepository {
 
 class WebTaskPersistent implements TaskRepository {
   // Use a hardcoded list for now or expand to persistence if needed
+  final List<RoutineTask> _defaultTasks = [
+    const RoutineTask(id: 'e1', title: 'スマホを置く', type: RoutineType.evening, sortOrder: 0),
+    const RoutineTask(id: 'e2', title: 'ストレッチ', type: RoutineType.evening, sortOrder: 1),
+    const RoutineTask(id: 'm1', title: '太陽の光を浴びる', type: RoutineType.morning, sortOrder: 0),
+    const RoutineTask(id: 'm2', title: 'コップ一杯の水を飲む', type: RoutineType.morning, sortOrder: 1),
+  ];
+
   @override
-  Future<List<RoutineTask>> getAllTasks() async => [];
+  Future<List<RoutineTask>> getAllTasks() async {
+    final prefs = await SharedPreferences.getInstance();
+    final jsonStr = prefs.getString('routine_tasks');
+    if (jsonStr == null) return _defaultTasks;
+
+    final List list = jsonDecode(jsonStr);
+    return list.map((item) {
+      final map = item as Map<String, dynamic>;
+      return RoutineTask(
+        id: map['id'],
+        title: map['title'],
+        type: RoutineType.values.firstWhere((e) => e.toString() == map['type']),
+        sortOrder: map['sortOrder'],
+      );
+    }).toList();
+  }
+
   @override
-  Future<List<RoutineTask>> getTasksByType(RoutineType type) async => [];
+  Future<List<RoutineTask>> getTasksByType(RoutineType type) async {
+    final all = await getAllTasks();
+    return all.where((t) => t.type == type).toList();
+  }
   @override
   Future<void> addTask(RoutineTask task) async {}
   @override
