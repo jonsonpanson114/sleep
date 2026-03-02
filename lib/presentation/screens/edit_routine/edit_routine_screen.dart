@@ -24,6 +24,7 @@ class _EditRoutineScreenState extends ConsumerState<EditRoutineScreen> {
   @override
   Widget build(BuildContext context) {
     final tasksAsync = ref.watch(routineTasksProvider(widget.type));
+    final todayLogAsync = ref.watch(todayLogProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -50,29 +51,53 @@ class _EditRoutineScreenState extends ConsumerState<EditRoutineScreen> {
                       key: ValueKey(task.id),
                       title: Text(task.title),
                       leading: const Icon(Icons.drag_handle),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.delete, color: AppColors.danger),
-                        onPressed: () async {
-                          final confirm = await showDialog<bool>(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: const Text('削除してよろしいですか？'),
-                              actions: [
-                                TextButton(
-                                  onPressed: () => Navigator.pop(context, false),
-                                  child: const Text('キャンセル'),
+                      // チェックボックスを追加
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          // チェックボックス
+                          todayLogAsync.when(
+                            loading: () => const SizedBox.shrink(),
+                            error: (_, __) => const SizedBox.shrink(),
+                            data: (log) {
+                              if (log == null) return const SizedBox.shrink();
+                              final isCompleted = log!.completedTaskIds.contains(task.id);
+                              return Checkbox(
+                                value: isCompleted,
+                                onChanged: (value) async {
+                                  if (value == null) return;
+                                  await ref.read(routineProvider.notifier).toggleTask(task.id, log!);
+                                },
+                              );
+                            },
+                          ),
+                          const SizedBox(width: 8),
+                          // 削除ボタン
+                          IconButton(
+                            icon: const Icon(Icons.delete, color: AppColors.danger),
+                            onPressed: () async {
+                              final confirm = await showDialog<bool>(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  title: const Text('削除してよろしいですか？'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Navigator.pop(context, false),
+                                      child: const Text('キャンセル'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () => Navigator.pop(context, true),
+                                      child: const Text('削除', style: TextStyle(color: AppColors.danger)),
+                                    ),
+                                  ],
                                 ),
-                                TextButton(
-                                  onPressed: () => Navigator.pop(context, true),
-                                  child: const Text('削除', style: TextStyle(color: AppColors.danger)),
-                                ),
-                              ],
-                            ),
-                          );
-                          if (confirm == true) {
-                            ref.read(routineProvider.notifier).deleteTask(task.id);
-                          }
-                        },
+                              );
+                              if (confirm == true) {
+                                ref.read(routineProvider.notifier).deleteTask(task.id);
+                              }
+                            },
+                          ),
+                        ],
                       ),
                     ),
                 ],

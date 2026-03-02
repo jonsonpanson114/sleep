@@ -44,6 +44,9 @@ class LogRepositoryImpl implements LogRepository {
             daytimeSleepiness: Value(log.daytimeSleepiness),
             feltIrritable: Value(log.feltIrritable),
             dreamNote: Value(log.dreamNote),
+            bedTime: Value(log.bedTime),
+            wakeTime: Value(log.wakeTime),
+            sleepDurationMinutes: Value(log.sleepDurationMinutes),
           ));
     } else {
       await (db.update(db.logsTable)
@@ -58,6 +61,9 @@ class LogRepositoryImpl implements LogRepository {
         daytimeSleepiness: Value(log.daytimeSleepiness),
         feltIrritable: Value(log.feltIrritable),
         dreamNote: Value(log.dreamNote),
+        bedTime: Value(log.bedTime),
+        wakeTime: Value(log.wakeTime),
+        sleepDurationMinutes: Value(log.sleepDurationMinutes),
       ));
     }
   }
@@ -108,6 +114,9 @@ class LogRepositoryImpl implements LogRepository {
       daytimeSleepiness: log.daytimeSleepiness,
       feltIrritable: log.feltIrritable,
       dreamNote: log.dreamNote,
+      bedTime: log.bedTime,
+      wakeTime: log.wakeTime,
+      sleepDurationMinutes: log.sleepDurationMinutes,
     );
   }
 }

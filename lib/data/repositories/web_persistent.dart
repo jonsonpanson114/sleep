@@ -71,14 +71,17 @@ class WebLogPersistent implements LogRepository {
       completedTaskIds: (map['completedTaskIds'] as List).cast<String>(),
       eveningCompleted: map['eveningCompleted'] ?? false,
       morningCompleted: map['morningCompleted'] ?? false,
-      eveningCompletedAt: map['eveningCompletedAt'] != null 
+      eveningCompletedAt: map['eveningCompletedAt'] != null
           ? DateTime.parse(map['eveningCompletedAt']) : null,
-      morningCompletedAt: map['morningCompletedAt'] != null 
+      morningCompletedAt: map['morningCompletedAt'] != null
           ? DateTime.parse(map['morningCompletedAt']) : null,
       napTaken: map['napTaken'],
       daytimeSleepiness: map['daytimeSleepiness'],
       feltIrritable: map['feltIrritable'],
       dreamNote: map['dreamNote'],
+      bedTime: map['bedTime'] != null ? DateTime.parse(map['bedTime']) : null,
+      wakeTime: map['wakeTime'] != null ? DateTime.parse(map['wakeTime']) : null,
+      sleepDurationMinutes: map['sleepDurationMinutes'],
     );
   }
 
@@ -106,6 +109,9 @@ class WebLogPersistent implements LogRepository {
       'daytimeSleepiness': log.daytimeSleepiness,
       'feltIrritable': log.feltIrritable,
       'dreamNote': log.dreamNote,
+      'bedTime': log.bedTime?.toIso8601String(),
+      'wakeTime': log.wakeTime?.toIso8601String(),
+      'sleepDurationMinutes': log.sleepDurationMinutes,
     };
     await prefs.setString('$_keyPrefix$key', jsonEncode(map));
     

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/constants.dart';
+import '../providers/settings_provider.dart';
 
 class TimePickerTile extends ConsumerWidget {
   final String label;
@@ -14,8 +15,8 @@ class TimePickerTile extends ConsumerWidget {
     required this.minute,
   });
 
-  Future<void> _selectTime(BuildContext context, bool isBedtime) async {
-    final _ = await showTimePicker(
+  Future<void> _selectTime(BuildContext context, WidgetRef ref, bool isBedtime) async {
+    final picked = await showTimePicker(
       context: context,
       initialTime: TimeOfDay(hour: hour, minute: minute),
       builder: (context, child) {
@@ -30,12 +31,14 @@ class TimePickerTile extends ConsumerWidget {
       },
     );
 
-    if (!context.mounted) return;
+    if (!context.mounted || picked == null) return;
 
     // Provider経由で更新
+    final notifier = ref.read(settingsProvider.notifier);
     if (isBedtime) {
-      // SettingsNotifier にアクセスする必要がある
-      // 実際の画面では直接実装
+      await notifier.updateBedtime(picked);
+    } else {
+      await notifier.updateWakeTime(picked);
     }
   }
 
@@ -57,7 +60,7 @@ class TimePickerTile extends ConsumerWidget {
           const Icon(Icons.chevron_right, color: AppColors.textSecondary),
         ],
       ),
-      onTap: () => _selectTime(context, label.contains('就寝')),
+      onTap: () => _selectTime(context, ref, label.contains('就寝')),
     );
   }
 }

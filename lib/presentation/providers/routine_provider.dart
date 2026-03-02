@@ -76,6 +76,28 @@ class RoutineNotifier extends StateNotifier<RoutineState> {
     await _completeRoutine.execute(RoutineType.morning, log);
   }
 
+  Future<void> completeMorningRoutineWithSleep(
+    DailyLog log,
+    DateTime bedTime,
+    DateTime wakeTime,
+  ) async {
+    if (log.morningCompleted) return;
+
+    // 睡眠時間を計算
+    final duration = wakeTime.difference(bedTime);
+    final sleepDurationMinutes = duration.inMinutes;
+
+    // 睡眠時間を含めてログを更新
+    final updatedLog = log.copyWith(
+      bedTime: bedTime,
+      wakeTime: wakeTime,
+      sleepDurationMinutes: sleepDurationMinutes,
+    );
+
+    // ルーティンを完了
+    await _completeRoutine.execute(RoutineType.morning, updatedLog);
+  }
+
   Future<void> addTask(RoutineTask task) async {
     await taskRepo.addTask(task);
     await _loadTasks();
