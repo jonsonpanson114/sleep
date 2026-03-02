@@ -14,7 +14,6 @@ class BadgeTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final borderColor = isUnlocked ? AppColors.badgeUnlocked : AppColors.badgeLocked;
     final textColor = isUnlocked ? AppColors.badgeUnlocked : AppColors.badgeLocked;
 
     return Card(

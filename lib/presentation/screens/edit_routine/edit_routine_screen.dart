@@ -1,121 +1,117 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../domain/entities/routine_task.dart';
 import '../../../core/constants.dart';
 import '../../providers/routine_provider.dart';
-import '../../widgets/task_tile.dart';
 
-class EditRoutineScreen extends ConsumerWidget {
-  final String routineType; // 'evening' | 'morning'
-
-  const EditRoutineScreen({
-    super.key,
-    required this.routineType,
-  });
+class EditRoutineScreen extends ConsumerStatefulWidget {
+  final RoutineType type;
+  const EditRoutineScreen({super.key, required this.type});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final isEvening = routineType == 'evening';
-    final tasksAsync = ref.watch(routineTasksProvider(isEvening ? RoutineType.evening : RoutineType.morning));
+  ConsumerState<EditRoutineScreen> createState() => _EditRoutineScreenState();
+}
+
+class _EditRoutineScreenState extends ConsumerState<EditRoutineScreen> {
+  final _textController = TextEditingController();
+
+  @override
+  void dispose() {
+    _textController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final tasksAsync = ref.watch(routineTasksProvider(widget.type));
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(isEvening ? '就寝ルーティンを編集' : '朝ルーティンを編集'),
+        title: Text(widget.type == RoutineType.morning ? '朝ルーティンの編集' : '夜ルーティンの編集'),
       ),
       body: tasksAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, st) => Center(
-                child: Text('エラー: $err'),
-              ),
-        data: (tasks) {
-          if (tasks.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+        error: (err, _) => Center(child: Text('エラー: $err')),
+        data: (tasks) => Column(
+          children: [
+            Expanded(
+              child: ReorderableListView(
+                padding: const EdgeInsets.all(16),
+                onReorder: (oldIndex, newIndex) {
+                  if (newIndex > oldIndex) newIndex -= 1;
+                  final items = List<RoutineTask>.from(tasks);
+                  final item = items.removeAt(oldIndex);
+                  items.insert(newIndex, item);
+                  ref.read(routineProvider.notifier).reorderTasks(widget.type, items);
+                },
                 children: [
-                  Icon(Icons.playlist_add, size: 64, color: AppColors.textSecondary),
-                  const SizedBox(height: 16),
-                  Text(
-                    'タスクがありません',
-                    style: TextStyle(color: AppColors.textSecondary),
-                  ),
-                  const SizedBox(height: 8),
-                  TextField(
-                    decoration: const InputDecoration(
-                      hintText: '新しいタスクを入力してください',
+                  for (final task in tasks)
+                    ListTile(
+                      key: ValueKey(task.id),
+                      title: Text(task.title),
+                      leading: const Icon(Icons.drag_handle),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.delete, color: AppColors.danger),
+                        onPressed: () async {
+                          final confirm = await showDialog<bool>(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: const Text('削除してよろしいですか？'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context, false),
+                                  child: const Text('キャンセル'),
+                                ),
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context, true),
+                                  child: const Text('削除', style: TextStyle(color: AppColors.danger)),
+                                ),
+                              ],
+                            ),
+                          );
+                          if (confirm == true) {
+                            ref.read(routineProvider.notifier).deleteTask(task.id);
+                          }
+                        },
+                      ),
                     ),
-                    onSubmitted: (value) {
-                      if (value.trim().isNotEmpty) {
-                        final uuid = DateTime.now().millisecond.toString();
-                        ref.read(routineProvider.notifier).addTask(
-                          RoutineTask(
-                            id: uuid,
-                            title: value.trim(),
-                            type: isEvening ? RoutineType.evening : RoutineType.morning,
-                            sortOrder: tasks.length,
-                          ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: _textController,
+                      decoration: const InputDecoration(
+                        hintText: '新しいタスクを追加',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  IconButton.filled(
+                    onPressed: () {
+                      if (_textController.text.trim().isNotEmpty) {
+                        final task = RoutineTask(
+                          id: DateTime.now().millisecondsSinceEpoch.toString(),
+                          title: _textController.text.trim(),
+                          type: widget.type,
+                          sortOrder: tasks.length,
                         );
+                        ref.read(routineProvider.notifier).addTask(task);
+                        _textController.clear();
                       }
                     },
+                    icon: const Icon(Icons.add),
                   ),
                 ],
               ),
-            );
-          }
-
-          return ReorderableListView(
-            onReorder: (oldIndex, newIndex) {
-              if (oldIndex != newIndex) {
-                final reorderedTasks = List<RoutineTask>.from(tasks);
-                final movedTask = reorderedTasks.removeAt(oldIndex);
-                reorderedTasks.insert(newIndex, movedTask);
-                // sortOrderを更新
-                for (var i = 0; i < reorderedTasks.length; i++) {
-                  reorderedTasks[i] =
-                      reorderedTasks[i].copyWith(sortOrder: i);
-                }
-                ref.read(routineProvider.notifier).reorderTasks(
-                    isEvening ? RoutineType.evening : RoutineType.morning,
-                    reorderedTasks,
-                  );
-              }
-            },
-            children: [
-              for (final task in tasks)
-                TaskTile(
-                  task: task,
-                  isCompleted: false,
-                  onTap: () {},
-                  onDelete: () async {
-                    final confirmed = await showDialog<bool>(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                                title: const Text('削除しますか？'),
-                                content: const Text('このタスクを削除します。よろしいですか？'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () => Navigator.pop(context, false),
-                                    child: const Text('キャンセル'),
-                                  ),
-                                  TextButton(
-                                    onPressed: () => Navigator.pop(context, true),
-                                    style: TextButton.styleFrom(
-                                      foregroundColor: AppColors.danger,
-                                    ),
-                                    child: const Text('削除'),
-                                  ),
-                                ],
-                              ),
-                        );
-                    if (confirmed == true) {
-                      ref.read(routineProvider.notifier).deleteTask(task.id);
-                    }
-                  },
-                ),
-            ],
-          );
-        },
+            ),
+          ],
+        ),
       ),
     );
   }

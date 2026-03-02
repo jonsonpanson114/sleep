@@ -40,7 +40,6 @@ class _ConditionToggleState extends State<ConditionToggle> {
 
   @override
   Widget build(BuildContext context) {
-    final isSelected = widget.answered;
     final hasValue = _selectedValue != null;
 
     return Padding(

@@ -1,5 +1,4 @@
 import '../entities/daily_log.dart';
-import '../../core/date_utils.dart';
 
 class CalculateStreak {
   /// 両ルーティン完了の日を「達成日」として連続日数を計算

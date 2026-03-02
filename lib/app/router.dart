@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../domain/entities/routine_task.dart';
 import '../presentation/screens/home/home_screen.dart';
 import '../presentation/screens/routine/evening_routine_screen.dart';
 import '../presentation/screens/routine/morning_routine_screen.dart';
@@ -32,8 +32,8 @@ class AppRouter {
       GoRoute(
         path: '/routine/:type/edit',
         builder: (context, state) {
-          final type = state.pathParameters['type'] ?? 'evening';
-          return EditRoutineScreen(routineType: type);
+          final type = state.pathParameters['type'] == 'morning' ? RoutineType.morning : RoutineType.evening;
+          return EditRoutineScreen(type: type);
         },
       ),
       GoRoute(

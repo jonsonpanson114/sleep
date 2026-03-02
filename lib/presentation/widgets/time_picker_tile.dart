@@ -15,7 +15,7 @@ class TimePickerTile extends ConsumerWidget {
   });
 
   Future<void> _selectTime(BuildContext context, bool isBedtime) async {
-    final picked = await showTimePicker(
+    final _ = await showTimePicker(
       context: context,
       initialTime: TimeOfDay(hour: hour, minute: minute),
       builder: (context, child) {

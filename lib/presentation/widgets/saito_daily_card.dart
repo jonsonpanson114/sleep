@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../data/services/daily_advice_specialist.dart';
 import '../providers/analytics_provider.dart';
 import '../../../core/constants.dart';
 

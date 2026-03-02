@@ -172,11 +172,16 @@ class WebTaskPersistent implements TaskRepository {
   }
 
   Stream<List<RoutineTask>> watchTasksByType(RoutineType type) {
-    Timer.run(() async {
-      final tasks = await getTasksByType(type);
-      _controller.add(tasks);
+    Timer.run(() => _emitCurrentTasks());
+    
+    return _controller.stream.map((allTasks) {
+      return allTasks.where((t) => t.type == type).toList();
     });
-    return _controller.stream.map((list) => list.where((t) => t.type == type).toList());
+  }
+
+  void _emitCurrentTasks() async {
+    final tasks = await getAllTasks();
+    _controller.add(tasks);
   }
 
   @override

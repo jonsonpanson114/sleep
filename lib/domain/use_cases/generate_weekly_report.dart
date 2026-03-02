@@ -93,8 +93,8 @@ class GenerateWeeklyReport {
     int totalDays,
   ) {
     // 先週より改善
-    if (prevRate != null && rate > prevRate! + 0.1) {
-      final improvement = ((rate - prevRate!) * 100).toInt();
+    if (prevRate != null && rate > prevRate + 0.1) {
+      final improvement = ((rate - prevRate) * 100).toInt();
       return '先週より達成率が$improvement%向上しました！素晴らしい👍';
     }
 

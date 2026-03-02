@@ -1,0 +1,73 @@
+Analyzing sleep...                                              
+
+warning - Unused import: 'package:flutter/material.dart' - lib\app\router.dart:1:8 - unused_import
+   info - 'package:drift/web.dart' is deprecated and shouldn't be used. This variant of web support has downsides compared to `package:drift/wasm.dart` and is in a deprecated bugfix-only mode. Please consider migrating to the new web APIS: https://drift.simonbinder.eu/web - lib\data\database\connection\web.dart:2:1 - deprecated_member_use
+warning - Unused import: 'package:drift/drift.dart' - lib\data\repositories\achievement_repository_impl.dart:1:8 - unused_import
+warning - Unused import: '../../core/date_utils.dart' - lib\domain\use_cases\calculate_streak.dart:2:8 - unused_import
+warning - The '!' will have no effect because the receiver can't be null - lib\domain\use_cases\generate_weekly_report.dart:96:44 - unnecessary_non_null_assertion
+warning - The '!' will have no effect because the receiver can't be null - lib\domain\use_cases\generate_weekly_report.dart:97:44 - unnecessary_non_null_assertion
+warning - Unused import: 'package:go_router/go_router.dart' - lib\presentation\screens\edit_routine\edit_routine_screen.dart:2:8 - unused_import
+   info - Unnecessary use of multiple underscores - lib\presentation\screens\history\history_screen.dart:68:30 - unnecessary_underscores
+   info - Unnecessary use of multiple underscores - lib\presentation\screens\history\history_screen.dart:74:30 - unnecessary_underscores
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\screens\history\history_screen.dart:170:38 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\screens\history\history_screen.dart:171:39 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\screens\history\history_screen.dart:176:56 - deprecated_member_use
+   info - The import of 'package:flutter/material.dart' is unnecessary because all of the used elements are also provided by the import of 'package:flutter/material.dart' - lib\presentation\screens\insights\insights_screen.dart:1:8 - unnecessary_import
+warning - The name TimeOfDay is shown, but isn't used - lib\presentation\screens\insights\insights_screen.dart:1:45 - unused_shown_name
+warning - The name Card is shown, but isn't used - lib\presentation\screens\insights\insights_screen.dart:1:93 - unused_shown_name
+warning - The name ColorScheme is shown, but isn't used - lib\presentation\screens\insights\insights_screen.dart:1:99 - unused_shown_name
+warning - Duplicate shown name - lib\presentation\screens\insights\insights_screen.dart:1:168 - duplicate_shown_name
+warning - The name Divider is shown, but isn't used - lib\presentation\screens\insights\insights_screen.dart:1:214 - unused_shown_name
+warning - The name Expanded is shown, but isn't used - lib\presentation\screens\insights\insights_screen.dart:1:235 - unused_shown_name
+warning - The name GridView is shown, but isn't used - lib\presentation\screens\insights\insights_screen.dart:1:268 - unused_shown_name
+warning - The name IconButton is shown, but isn't used - lib\presentation\screens\insights\insights_screen.dart:1:284 - unused_shown_name
+warning - The name MediaQuery is shown, but isn't used - lib\presentation\screens\insights\insights_screen.dart:1:348 - unused_shown_name
+warning - The name Radius is shown, but isn't used - lib\presentation\screens\insights\insights_screen.dart:1:377 - unused_shown_name
+warning - The name RoundedRectangleBorder is shown, but isn't used - lib\presentation\screens\insights\insights_screen.dart:1:385 - unused_shown_name
+warning - The name SingleTickerProviderStateMixin is shown, but isn't used - lib\presentation\screens\insights\insights_screen.dart:1:424 - unused_shown_name
+warning - The name SliverGridDelegateWithFixedCrossAxisCount is shown, but isn't used - lib\presentation\screens\insights\insights_screen.dart:1:466 - unused_shown_name
+warning - The name SliverToBoxAdapter is shown, but isn't used - lib\presentation\screens\insights\insights_screen.dart:1:509 - unused_shown_name
+warning - The name SnackBar is shown, but isn't used - lib\presentation\screens\insights\insights_screen.dart:1:529 - unused_shown_name
+warning - The name Spacer is shown, but isn't used - lib\presentation\screens\insights\insights_screen.dart:1:539 - unused_shown_name
+warning - The name Stack is shown, but isn't used - lib\presentation\screens\insights\insights_screen.dart:1:547 - unused_shown_name
+warning - The name State is shown, but isn't used - lib\presentation\screens\insights\insights_screen.dart:1:554 - unused_shown_name
+warning - The name StatefulWidget is shown, but isn't used - lib\presentation\screens\insights\insights_screen.dart:1:561 - unused_shown_name
+warning - The name TextButton is shown, but isn't used - lib\presentation\screens\insights\insights_screen.dart:1:583 - unused_shown_name
+warning - The name Theme is shown, but isn't used - lib\presentation\screens\insights\insights_screen.dart:1:606 - unused_shown_name
+warning - The name VerticalDivider is shown, but isn't used - lib\presentation\screens\insights\insights_screen.dart:1:613 - unused_shown_name
+warning - The name WidgetStateProperty is shown, but isn't used - lib\presentation\screens\insights\insights_screen.dart:1:638 - unused_shown_name
+   info - Unnecessary 'const' keyword - lib\presentation\screens\insights\insights_screen.dart:67:23 - unnecessary_const
+   info - Unnecessary 'const' keyword - lib\presentation\screens\insights\insights_screen.dart:74:23 - unnecessary_const
+   info - Unnecessary 'const' keyword - lib\presentation\screens\insights\insights_screen.dart:75:23 - unnecessary_const
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\screens\insights\insights_screen.dart:110:33 - deprecated_member_use
+warning - The value of the local variable 'borderColor' isn't used - lib\presentation\widgets\badge_tile.dart:17:11 - unused_local_variable
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\badge_tile.dart:56:50 - deprecated_member_use
+warning - The value of the local variable 'isSelected' isn't used - lib\presentation\widgets\condition_toggle.dart:43:11 - unused_local_variable
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\condition_toggle.dart:56:45 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\condition_toggle.dart:81:76 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\insight_card.dart:26:34 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\mission_card.dart:19:33 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\mission_card.dart:25:37 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\mission_card.dart:26:35 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\mission_card.dart:79:48 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\mission_card.dart:81:67 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\mission_card.dart:104:67 - deprecated_member_use
+warning - Unused import: '../../data/services/daily_advice_specialist.dart' - lib\presentation\widgets\saito_daily_card.dart:3:8 - unused_import
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\saito_daily_card.dart:40:47 - deprecated_member_use
+   info - Unnecessary use of multiple underscores - lib\presentation\widgets\saito_daily_card.dart:71:24 - unnecessary_underscores
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\saito_daily_card.dart:77:45 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\saito_daily_card.dart:79:64 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\sleep_status_banner.dart:26:31 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\sleep_status_banner.dart:31:37 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\stamp_calendar.dart:131:28 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\stamp_calendar.dart:139:50 - deprecated_member_use
+warning - The value of the local variable 'picked' isn't used - lib\presentation\widgets\time_picker_tile.dart:18:11 - unused_local_variable
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\weekly_pattern_chart.dart:110:54 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\weekly_pattern_chart.dart:133:42 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\weekly_pattern_chart.dart:152:22 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\weekly_pattern_chart.dart:154:41 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\weekly_summary_card.dart:13:31 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\weekly_summary_card.dart:16:50 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\weekly_summary_card.dart:32:45 - deprecated_member_use
+
+69 issues found. (ran in 4.7s)

@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart' show TimeOfDay, BuildContext, Color, Column, Center, Card, ColorScheme, Container, CrossAxisAlignment, BoxShadow, BorderRadius, BoxShadow, Colors, CircularProgressIndicator, Divider, EdgeInsets, Expanded, FontWeight, FontStyle, GridView, Icon, IconButton, Icons, LinearGradient, ListView, MainAxisAlignment, MediaQuery, Offset, Padding, Radius, RoundedRectangleBorder, Row, Scaffold, SingleTickerProviderStateMixin, SizedBox, SliverGridDelegateWithFixedCrossAxisCount, SliverToBoxAdapter, SnackBar, Spacer, Stack, State, StatefulWidget, Text, TextButton, TextStyle, Theme, VerticalDivider, Widget, WidgetStateProperty;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/insights_provider.dart';
@@ -61,9 +60,9 @@ class InsightsScreen extends ConsumerWidget {
                 const Center(
                   child: Column(
                     children: [
-                      SizedBox(height: 16),
-                      Icon(Icons.bar_chart, size: 48, color: AppColors.textSecondary),
-                      SizedBox(height: 12),
+                      const SizedBox(height: 16),
+                      const Icon(Icons.bar_chart, size: 48, color: AppColors.textSecondary),
+                      const SizedBox(height: 12),
                       const Text(
                         '相関データ収集中',
                         style: TextStyle(
