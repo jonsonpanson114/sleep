@@ -92,6 +92,8 @@ class RoutineNotifier extends StateNotifier<RoutineState> {
     DailyLog log,
     DateTime bedTime,
     DateTime wakeTime,
+    TimeOfDay? idealBedTime,
+    TimeOfDay? idealWakeTime,
   ) async {
     if (log.morningCompleted) return;
 
@@ -107,6 +109,8 @@ class RoutineNotifier extends StateNotifier<RoutineState> {
       wakeTime: wakeTime,
       sleepDurationMinutes: sleepDurationMinutes,
       morningTaskSnapshot: snapshot,
+      idealBedTime: idealBedTime,
+      idealWakeTime: idealWakeTime,
     );
 
     // ルーティンを完了

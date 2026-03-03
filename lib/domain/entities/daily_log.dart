@@ -14,6 +14,8 @@ class DailyLog {
   final int? sleepDurationMinutes;
   final String? eveningTaskSnapshot;
   final String? morningTaskSnapshot;
+  final TimeOfDay? idealBedTime;
+  final TimeOfDay? idealWakeTime;
 
   const DailyLog({
     required this.date,
@@ -49,6 +51,8 @@ class DailyLog {
     int? sleepDurationMinutes,
     String? eveningTaskSnapshot,
     String? morningTaskSnapshot,
+    TimeOfDay? idealBedTime,
+    TimeOfDay? idealWakeTime,
   }) {
     return DailyLog(
       date: date ?? this.date,
@@ -66,6 +70,8 @@ class DailyLog {
       sleepDurationMinutes: sleepDurationMinutes ?? this.sleepDurationMinutes,
       eveningTaskSnapshot: eveningTaskSnapshot ?? this.eveningTaskSnapshot,
       morningTaskSnapshot: morningTaskSnapshot ?? this.morningTaskSnapshot,
+      idealBedTime: idealBedTime ?? this.idealBedTime,
+      idealWakeTime: idealWakeTime ?? this.idealWakeTime,
     );
   }
 }

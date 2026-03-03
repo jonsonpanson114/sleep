@@ -97,7 +97,7 @@ class _MorningRoutineScreenState extends ConsumerState<MorningRoutineScreen> {
   }
 
   Future<void> _showCompletionDialog(BuildContext context, DailyLog log) async {
-    final result = await showDialog<(DateTime?, DateTime?)>(
+    final result = await showDialog<(DateTime?, DateTime?, TimeOfDay?, TimeOfDay?)>(
       context: context,
       builder: (context) => _SleepTimeDialog(),
     );
@@ -105,11 +105,13 @@ class _MorningRoutineScreenState extends ConsumerState<MorningRoutineScreen> {
     if (result != null) {
       final bedTime = result.$1;
       final wakeTime = result.$2;
+      final idealBedTime = result.$3;
+      final idealWakeTime = result.$4;
 
       if (bedTime != null && wakeTime != null) {
         await ref
             .read(routineProvider.notifier)
-            .completeMorningRoutineWithSleep(log, bedTime, wakeTime);
+            .completeMorningRoutineWithSleep(log, bedTime, wakeTime, idealBedTime, idealWakeTime);
       } else {
         await ref.read(routineProvider.notifier).completeMorningRoutine(log);
       }
@@ -128,6 +130,8 @@ class _SleepTimeDialog extends StatefulWidget {
 class _SleepTimeDialogState extends State<_SleepTimeDialog> {
   DateTime? bedTime;
   DateTime? wakeTime;
+  TimeOfDay? idealBedTime;
+  TimeOfDay? idealWakeTime;
 
   @override
   Widget build(BuildContext context) {
@@ -152,11 +156,12 @@ class _SleepTimeDialogState extends State<_SleepTimeDialog> {
               final now = DateTime.now();
               final picked = await showTimePicker(
                 context: context,
-                initialTime: const TimeOfDay(hour: 23, minute: 0),
+                initialTime: bedTime != null
+                    ? TimeOfDay(hour: bedTime!.hour, minute: bedTime!.minute)
+                    : const TimeOfDay(hour: 23, minute: 0),
               );
               if (picked != null) {
                 setState(() {
-                  // 昨日の就寝時間として設定
                   bedTime = DateTime(now.year, now.month, now.day - 1, picked.hour, picked.minute);
                 });
               }
@@ -177,12 +182,59 @@ class _SleepTimeDialogState extends State<_SleepTimeDialog> {
               final now = DateTime.now();
               final picked = await showTimePicker(
                 context: context,
+                initialTime: wakeTime != null
+                    ? TimeOfDay(hour: wakeTime!.hour, minute: wakeTime!.minute)
+                    : const TimeOfDay(hour: 6, minute: 30),
+              );
+              if (picked != null) {
+                setState(() {
+                  wakeTime = DateTime(now.year, now.month, now.day, picked.hour, picked.minute);
+                });
+              }
+            },
+          ),
+          const Divider(),
+          // 理想時間
+          ListTile(
+            leading: const Icon(Icons.brightness_5, color: Colors.purple),
+            title: const Text('理想就寝時間'),
+            subtitle: Text(
+              idealBedTime != null
+                  ? '${idealBedTime!.hour.toString().padLeft(2, '0')}:${idealBedTime!.minute.toString().padLeft(2, '0')}'
+                  : '設定しない',
+            ),
+            trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+            onTap: () async {
+              final now = DateTime.now();
+              final picked = await showTimePicker(
+                context: context,
+                initialTime: const TimeOfDay(hour: 22, minute: 30),
+              );
+              if (picked != null) {
+                setState(() {
+                  idealBedTime = picked;
+                });
+              }
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.wb_twilight, color: Colors.blue),
+            title: const Text('理想起床時間'),
+            subtitle: Text(
+              idealWakeTime != null
+                  ? '${idealWakeTime!.hour.toString().padLeft(2, '0')}:${idealWakeTime!.minute.toString().padLeft(2, '0')}'
+                  : '設定しない',
+            ),
+            trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+            onTap: () async {
+              final now = DateTime.now();
+              final picked = await showTimePicker(
+                context: context,
                 initialTime: const TimeOfDay(hour: 6, minute: 30),
               );
               if (picked != null) {
                 setState(() {
-                  // 今朝の起床時間として設定
-                  wakeTime = DateTime(now.year, now.month, now.day, picked.hour, picked.minute);
+                  idealWakeTime = picked;
                 });
               }
             },
@@ -212,7 +264,7 @@ class _SleepTimeDialogState extends State<_SleepTimeDialog> {
           child: const Text('スキップ'),
         ),
         TextButton(
-          onPressed: () => Navigator.pop(context, (bedTime, wakeTime)),
+          onPressed: () => Navigator.pop(context, (bedTime, wakeTime, idealBedTime, idealWakeTime)),
           child: const Text('記録する'),
         ),
       ],

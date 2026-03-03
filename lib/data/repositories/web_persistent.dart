@@ -84,6 +84,12 @@ class WebLogPersistent implements LogRepository {
       sleepDurationMinutes: map['sleepDurationMinutes'],
       eveningTaskSnapshot: map['eveningTaskSnapshot'],
       morningTaskSnapshot: map['morningTaskSnapshot'],
+      idealBedTime: map['idealBedTimeHour'] != null && map['idealBedTimeMinute'] != null
+          ? TimeOfDay(hour: map['idealBedTimeHour'], minute: map['idealBedTimeMinute'])
+          : null,
+      idealWakeTime: map['idealWakeTimeHour'] != null && map['idealWakeTimeMinute'] != null
+          ? TimeOfDay(hour: map['idealWakeTimeHour'], minute: map['idealWakeTimeMinute'])
+          : null,
     );
   }
 
@@ -116,6 +122,10 @@ class WebLogPersistent implements LogRepository {
       'sleepDurationMinutes': log.sleepDurationMinutes,
       'eveningTaskSnapshot': log.eveningTaskSnapshot,
       'morningTaskSnapshot': log.morningTaskSnapshot,
+      'idealBedTimeHour': log.idealBedTime?.hour,
+      'idealBedTimeMinute': log.idealBedTime?.minute,
+      'idealWakeTimeHour': log.idealWakeTime?.hour,
+      'idealWakeTimeMinute': log.idealWakeTime?.minute,
     };
     await prefs.setString('$_keyPrefix$key', jsonEncode(map));
 
