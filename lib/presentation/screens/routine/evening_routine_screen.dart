@@ -62,9 +62,7 @@ class EveningRoutineScreen extends ConsumerWidget {
                           task: task,
                           isCompleted: (log?.completedTaskIds ?? [])
                               .contains(task.id),
-                          onTap: log == null
-                              ? null
-                              : () => ref
+                          onTap: () => ref
                                   .read(routineProvider.notifier)
                                   .toggleTask(task.id, log),
                         ),

@@ -48,11 +48,9 @@ class _MorningRoutineScreenState extends ConsumerState<MorningRoutineScreen> {
                           title: Text(task.title),
                           value: isCompleted,
                           onChanged: (val) {
-                            if (log != null) {
-                              ref
-                                  .read(routineProvider.notifier)
-                                  .toggleTask(task.id, log);
-                            }
+                            ref
+                                .read(routineProvider.notifier)
+                                .toggleTask(task.id, log);
                           },
                         );
                       },
