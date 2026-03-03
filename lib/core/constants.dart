@@ -43,18 +43,19 @@ class AchievementIds {
 
 /// Gemini API Configuration
 class GeminiAPIConfig {
-  static const enabled = false; // Set to true when API key is configured
-  static const apiKey = ''; // Add your API key here or set via environment variable
-  static const baseUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent';
-  static const model = 'models/gemini-2.0-flash-exp';
+  /// 環境変数GEMINI_API_KEYが設定されている場合のみ有効
+  static bool get enabled {
+    return apiKeyValue.isNotEmpty;
+  }
 
-  /// Check if API is properly configured
-  static bool get isConfigured => enabled && apiKey.isNotEmpty;
-
-  /// Get API key from environment variable or fallback to static key
+  /// 環境変数からAPIキーを取得
   static String get apiKeyValue {
-    if (apiKey.isNotEmpty) return apiKey;
-    // Check environment variable (for future web deployment)
     return const String.fromEnvironment('GEMINI_API_KEY', defaultValue: '');
   }
+
+  /// APIが設定されているか確認
+  static bool get isConfigured => apiKeyValue.isNotEmpty;
+
+  static const baseUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent';
+  static const model = 'models/gemini-2.0-flash-exp';
 }
