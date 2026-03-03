@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants.dart';
@@ -131,33 +132,105 @@ class _StampCalendarState extends State<StampCalendar> {
         ? AppColors.accent.withOpacity(0.15)
         : Colors.transparent;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: BorderRadius.circular(8),
-        border: isToday
-            ? Border.all(color: AppColors.accent.withOpacity(0.5))
-            : null,
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            '$day',
-            style: TextStyle(
-              fontSize: 11,
-              color: isToday ? AppColors.accent : AppColors.textSecondary,
-              fontWeight: isToday ? FontWeight.bold : FontWeight.normal,
+    return GestureDetector(
+      onTap: () {
+        if (log != null) _showLogDetails(context, log);
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: bgColor,
+          borderRadius: BorderRadius.circular(8),
+          border: isToday
+              ? Border.all(color: AppColors.accent.withOpacity(0.5))
+              : null,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              '$day',
+              style: TextStyle(
+                fontSize: 11,
+                color: isToday ? AppColors.accent : AppColors.textSecondary,
+                fontWeight: isToday ? FontWeight.bold : FontWeight.normal,
+              ),
             ),
-          ),
-          const SizedBox(height: 2),
-          Text(
-            stamp,
-            style: const TextStyle(fontSize: 18),
-          ),
-        ],
+            const SizedBox(height: 2),
+            Text(
+              stamp,
+              style: const TextStyle(fontSize: 18),
+            ),
+          ],
+        ),
       ),
     );
+  }
+
+  void _showLogDetails(BuildContext context, DailyLog log) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(DateFormat('yyyy年M月d日').format(log.date)),
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (log.sleepDurationMinutes != null) ...[
+                  Text(
+                    '睡眠時間: ${log.sleepDurationMinutes! ~/ 60}時間${log.sleepDurationMinutes! % 60}分',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 16),
+                ],
+                const Text('夜のルーティン:', style: TextStyle(fontWeight: FontWeight.bold)),
+                const SizedBox(height: 8),
+                ..._buildSnapshotList(log.eveningTaskSnapshot),
+                const SizedBox(height: 16),
+                const Text('朝のルーティン:', style: TextStyle(fontWeight: FontWeight.bold)),
+                const SizedBox(height: 8),
+                ..._buildSnapshotList(log.morningTaskSnapshot),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('閉じる'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  List<Widget> _buildSnapshotList(String? snapshotStr) {
+    if (snapshotStr == null) return [const Text('未記録', style: TextStyle(color: Colors.grey, fontSize: 13))];
+    try {
+      final List list = jsonDecode(snapshotStr);
+      return list.map((item) {
+        final map = item as Map<String, dynamic>;
+        final title = map['title'] as String;
+        final completed = map['completed'] as bool;
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4),
+          child: Row(
+            children: [
+              Icon(
+                completed ? Icons.check_circle : Icons.radio_button_unchecked,
+                size: 16,
+                color: completed ? Colors.green : Colors.grey,
+              ),
+              const SizedBox(width: 8),
+              Expanded(child: Text(title, style: const TextStyle(fontSize: 13))),
+            ],
+          ),
+        );
+      }).toList();
+    } catch (_) {
+      return [const Text('読み込みエラー', style: TextStyle(color: Colors.red, fontSize: 13))];
+    }
   }
 
   String _getStamp(DailyLog? log) {

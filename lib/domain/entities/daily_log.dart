@@ -12,6 +12,8 @@ class DailyLog {
   final DateTime? bedTime;
   final DateTime? wakeTime;
   final int? sleepDurationMinutes;
+  final String? eveningTaskSnapshot;
+  final String? morningTaskSnapshot;
 
   const DailyLog({
     required this.date,
@@ -27,6 +29,8 @@ class DailyLog {
     this.bedTime,
     this.wakeTime,
     this.sleepDurationMinutes,
+    this.eveningTaskSnapshot,
+    this.morningTaskSnapshot,
   });
 
   DailyLog copyWith({
@@ -43,6 +47,8 @@ class DailyLog {
     DateTime? bedTime,
     DateTime? wakeTime,
     int? sleepDurationMinutes,
+    String? eveningTaskSnapshot,
+    String? morningTaskSnapshot,
   }) {
     return DailyLog(
       date: date ?? this.date,
@@ -58,6 +64,8 @@ class DailyLog {
       bedTime: bedTime ?? this.bedTime,
       wakeTime: wakeTime ?? this.wakeTime,
       sleepDurationMinutes: sleepDurationMinutes ?? this.sleepDurationMinutes,
+      eveningTaskSnapshot: eveningTaskSnapshot ?? this.eveningTaskSnapshot,
+      morningTaskSnapshot: morningTaskSnapshot ?? this.morningTaskSnapshot,
     );
   }
 }

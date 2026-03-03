@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/routine_task.dart';
 import '../../domain/entities/daily_log.dart';
@@ -68,12 +69,16 @@ class RoutineNotifier extends StateNotifier<RoutineState> {
 
   Future<void> completeEveningRoutine(DailyLog log) async {
     if (log.eveningCompleted) return;
-    await _completeRoutine.execute(RoutineType.evening, log);
+    final snapshot = _buildSnapshot(state.eveningTasks, log);
+    final updatedLog = log.copyWith(eveningTaskSnapshot: snapshot);
+    await _completeRoutine.execute(RoutineType.evening, updatedLog);
   }
 
   Future<void> completeMorningRoutine(DailyLog log) async {
     if (log.morningCompleted) return;
-    await _completeRoutine.execute(RoutineType.morning, log);
+    final snapshot = _buildSnapshot(state.morningTasks, log);
+    final updatedLog = log.copyWith(morningTaskSnapshot: snapshot);
+    await _completeRoutine.execute(RoutineType.morning, updatedLog);
   }
 
   Future<void> completeMorningRoutineWithSleep(
@@ -87,15 +92,26 @@ class RoutineNotifier extends StateNotifier<RoutineState> {
     final duration = wakeTime.difference(bedTime);
     final sleepDurationMinutes = duration.inMinutes;
 
+    final snapshot = _buildSnapshot(state.morningTasks, log);
+
     // 睡眠時間を含めてログを更新
     final updatedLog = log.copyWith(
       bedTime: bedTime,
       wakeTime: wakeTime,
       sleepDurationMinutes: sleepDurationMinutes,
+      morningTaskSnapshot: snapshot,
     );
 
     // ルーティンを完了
     await _completeRoutine.execute(RoutineType.morning, updatedLog);
+  }
+
+  String _buildSnapshot(List<RoutineTask> tasks, DailyLog log) {
+    final list = tasks.map((t) => {
+      'title': t.title,
+      'completed': log.completedTaskIds.contains(t.id),
+    }).toList();
+    return jsonEncode(list);
   }
 
   Future<void> addTask(RoutineTask task) async {

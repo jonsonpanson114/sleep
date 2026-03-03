@@ -4,11 +4,13 @@ import '../../../core/constants.dart';
 class CompletionRing extends StatelessWidget {
   final int completed;
   final int total;
+  final double size;
 
   const CompletionRing({
     super.key,
     required this.completed,
     required this.total,
+    this.size = 100,
   });
 
   double get _percentage => total == 0 ? 0.0 : completed / total;
@@ -17,14 +19,14 @@ class CompletionRing extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 100,
-      height: 100,
+      width: size,
+      height: size,
       child: Stack(
         alignment: Alignment.center,
         children: [
           CircularProgressIndicator(
             value: _progressValue,
-            strokeWidth: 8,
+            strokeWidth: size * 0.08, // Scale stroke width with size
             backgroundColor: AppColors.cardBackground,
             valueColor: AlwaysStoppedAnimation<Color>(_getColor()),
           ),
@@ -32,7 +34,7 @@ class CompletionRing extends StatelessWidget {
             child: Text(
               '$completed/$total',
               style: TextStyle(
-                fontSize: 24,
+                fontSize: size * 0.24, // Scale font size with size
                 fontWeight: FontWeight.bold,
                 color: AppColors.textPrimary,
               ),

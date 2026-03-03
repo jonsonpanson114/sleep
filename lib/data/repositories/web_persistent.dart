@@ -82,6 +82,8 @@ class WebLogPersistent implements LogRepository {
       bedTime: map['bedTime'] != null ? DateTime.parse(map['bedTime']) : null,
       wakeTime: map['wakeTime'] != null ? DateTime.parse(map['wakeTime']) : null,
       sleepDurationMinutes: map['sleepDurationMinutes'],
+      eveningTaskSnapshot: map['eveningTaskSnapshot'],
+      morningTaskSnapshot: map['morningTaskSnapshot'],
     );
   }
 
@@ -112,6 +114,8 @@ class WebLogPersistent implements LogRepository {
       'bedTime': log.bedTime?.toIso8601String(),
       'wakeTime': log.wakeTime?.toIso8601String(),
       'sleepDurationMinutes': log.sleepDurationMinutes,
+      'eveningTaskSnapshot': log.eveningTaskSnapshot,
+      'morningTaskSnapshot': log.morningTaskSnapshot,
     };
     await prefs.setString('$_keyPrefix$key', jsonEncode(map));
     

@@ -61,12 +61,12 @@ class _EditRoutineScreenState extends ConsumerState<EditRoutineScreen> {
                             error: (_, __) => const SizedBox.shrink(),
                             data: (log) {
                               if (log == null) return const SizedBox.shrink();
-                              final isCompleted = log!.completedTaskIds.contains(task.id);
+                              final isCompleted = log.completedTaskIds.contains(task.id);
                               return Checkbox(
                                 value: isCompleted,
                                 onChanged: (value) async {
                                   if (value == null) return;
-                                  await ref.read(routineProvider.notifier).toggleTask(task.id, log!);
+                                  await ref.read(routineProvider.notifier).toggleTask(task.id, log);
                                 },
                               );
                             },

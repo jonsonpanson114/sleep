@@ -15,6 +15,8 @@ class LogsTable extends Table {
   DateTimeColumn get bedTime => dateTime().nullable()();
   DateTimeColumn get wakeTime => dateTime().nullable()();
   IntColumn get sleepDurationMinutes => integer().nullable()();
+  TextColumn get eveningTaskSnapshot => text().nullable()();
+  TextColumn get morningTaskSnapshot => text().nullable()();
 
   @override
   Set<Column> get primaryKey => {dateKey};

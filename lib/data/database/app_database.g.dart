@@ -1016,6 +1016,28 @@ class $LogsTableTable extends LogsTable with TableInfo<$LogsTableTable, Log> {
     type: DriftSqlType.int,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _eveningTaskSnapshotMeta =
+      const VerificationMeta('eveningTaskSnapshot');
+  @override
+  late final GeneratedColumn<String> eveningTaskSnapshot =
+      GeneratedColumn<String>(
+        'evening_task_snapshot',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _morningTaskSnapshotMeta =
+      const VerificationMeta('morningTaskSnapshot');
+  @override
+  late final GeneratedColumn<String> morningTaskSnapshot =
+      GeneratedColumn<String>(
+        'morning_task_snapshot',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
   @override
   List<GeneratedColumn> get $columns => [
     dateKey,
@@ -1031,6 +1053,8 @@ class $LogsTableTable extends LogsTable with TableInfo<$LogsTableTable, Log> {
     bedTime,
     wakeTime,
     sleepDurationMinutes,
+    eveningTaskSnapshot,
+    morningTaskSnapshot,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -1150,6 +1174,24 @@ class $LogsTableTable extends LogsTable with TableInfo<$LogsTableTable, Log> {
         ),
       );
     }
+    if (data.containsKey('evening_task_snapshot')) {
+      context.handle(
+        _eveningTaskSnapshotMeta,
+        eveningTaskSnapshot.isAcceptableOrUnknown(
+          data['evening_task_snapshot']!,
+          _eveningTaskSnapshotMeta,
+        ),
+      );
+    }
+    if (data.containsKey('morning_task_snapshot')) {
+      context.handle(
+        _morningTaskSnapshotMeta,
+        morningTaskSnapshot.isAcceptableOrUnknown(
+          data['morning_task_snapshot']!,
+          _morningTaskSnapshotMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -1211,6 +1253,14 @@ class $LogsTableTable extends LogsTable with TableInfo<$LogsTableTable, Log> {
         DriftSqlType.int,
         data['${effectivePrefix}sleep_duration_minutes'],
       ),
+      eveningTaskSnapshot: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}evening_task_snapshot'],
+      ),
+      morningTaskSnapshot: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}morning_task_snapshot'],
+      ),
     );
   }
 
@@ -1234,6 +1284,8 @@ class Log extends DataClass implements Insertable<Log> {
   final DateTime? bedTime;
   final DateTime? wakeTime;
   final int? sleepDurationMinutes;
+  final String? eveningTaskSnapshot;
+  final String? morningTaskSnapshot;
   const Log({
     required this.dateKey,
     required this.completedTaskIds,
@@ -1248,6 +1300,8 @@ class Log extends DataClass implements Insertable<Log> {
     this.bedTime,
     this.wakeTime,
     this.sleepDurationMinutes,
+    this.eveningTaskSnapshot,
+    this.morningTaskSnapshot,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -1282,6 +1336,12 @@ class Log extends DataClass implements Insertable<Log> {
     }
     if (!nullToAbsent || sleepDurationMinutes != null) {
       map['sleep_duration_minutes'] = Variable<int>(sleepDurationMinutes);
+    }
+    if (!nullToAbsent || eveningTaskSnapshot != null) {
+      map['evening_task_snapshot'] = Variable<String>(eveningTaskSnapshot);
+    }
+    if (!nullToAbsent || morningTaskSnapshot != null) {
+      map['morning_task_snapshot'] = Variable<String>(morningTaskSnapshot);
     }
     return map;
   }
@@ -1319,6 +1379,12 @@ class Log extends DataClass implements Insertable<Log> {
       sleepDurationMinutes: sleepDurationMinutes == null && nullToAbsent
           ? const Value.absent()
           : Value(sleepDurationMinutes),
+      eveningTaskSnapshot: eveningTaskSnapshot == null && nullToAbsent
+          ? const Value.absent()
+          : Value(eveningTaskSnapshot),
+      morningTaskSnapshot: morningTaskSnapshot == null && nullToAbsent
+          ? const Value.absent()
+          : Value(morningTaskSnapshot),
     );
   }
 
@@ -1347,6 +1413,12 @@ class Log extends DataClass implements Insertable<Log> {
       sleepDurationMinutes: serializer.fromJson<int?>(
         json['sleepDurationMinutes'],
       ),
+      eveningTaskSnapshot: serializer.fromJson<String?>(
+        json['eveningTaskSnapshot'],
+      ),
+      morningTaskSnapshot: serializer.fromJson<String?>(
+        json['morningTaskSnapshot'],
+      ),
     );
   }
   @override
@@ -1366,6 +1438,8 @@ class Log extends DataClass implements Insertable<Log> {
       'bedTime': serializer.toJson<DateTime?>(bedTime),
       'wakeTime': serializer.toJson<DateTime?>(wakeTime),
       'sleepDurationMinutes': serializer.toJson<int?>(sleepDurationMinutes),
+      'eveningTaskSnapshot': serializer.toJson<String?>(eveningTaskSnapshot),
+      'morningTaskSnapshot': serializer.toJson<String?>(morningTaskSnapshot),
     };
   }
 
@@ -1383,6 +1457,8 @@ class Log extends DataClass implements Insertable<Log> {
     Value<DateTime?> bedTime = const Value.absent(),
     Value<DateTime?> wakeTime = const Value.absent(),
     Value<int?> sleepDurationMinutes = const Value.absent(),
+    Value<String?> eveningTaskSnapshot = const Value.absent(),
+    Value<String?> morningTaskSnapshot = const Value.absent(),
   }) => Log(
     dateKey: dateKey ?? this.dateKey,
     completedTaskIds: completedTaskIds ?? this.completedTaskIds,
@@ -1407,6 +1483,12 @@ class Log extends DataClass implements Insertable<Log> {
     sleepDurationMinutes: sleepDurationMinutes.present
         ? sleepDurationMinutes.value
         : this.sleepDurationMinutes,
+    eveningTaskSnapshot: eveningTaskSnapshot.present
+        ? eveningTaskSnapshot.value
+        : this.eveningTaskSnapshot,
+    morningTaskSnapshot: morningTaskSnapshot.present
+        ? morningTaskSnapshot.value
+        : this.morningTaskSnapshot,
   );
   Log copyWithCompanion(LogsTableCompanion data) {
     return Log(
@@ -1439,6 +1521,12 @@ class Log extends DataClass implements Insertable<Log> {
       sleepDurationMinutes: data.sleepDurationMinutes.present
           ? data.sleepDurationMinutes.value
           : this.sleepDurationMinutes,
+      eveningTaskSnapshot: data.eveningTaskSnapshot.present
+          ? data.eveningTaskSnapshot.value
+          : this.eveningTaskSnapshot,
+      morningTaskSnapshot: data.morningTaskSnapshot.present
+          ? data.morningTaskSnapshot.value
+          : this.morningTaskSnapshot,
     );
   }
 
@@ -1457,7 +1545,9 @@ class Log extends DataClass implements Insertable<Log> {
           ..write('dreamNote: $dreamNote, ')
           ..write('bedTime: $bedTime, ')
           ..write('wakeTime: $wakeTime, ')
-          ..write('sleepDurationMinutes: $sleepDurationMinutes')
+          ..write('sleepDurationMinutes: $sleepDurationMinutes, ')
+          ..write('eveningTaskSnapshot: $eveningTaskSnapshot, ')
+          ..write('morningTaskSnapshot: $morningTaskSnapshot')
           ..write(')'))
         .toString();
   }
@@ -1477,6 +1567,8 @@ class Log extends DataClass implements Insertable<Log> {
     bedTime,
     wakeTime,
     sleepDurationMinutes,
+    eveningTaskSnapshot,
+    morningTaskSnapshot,
   );
   @override
   bool operator ==(Object other) =>
@@ -1494,7 +1586,9 @@ class Log extends DataClass implements Insertable<Log> {
           other.dreamNote == this.dreamNote &&
           other.bedTime == this.bedTime &&
           other.wakeTime == this.wakeTime &&
-          other.sleepDurationMinutes == this.sleepDurationMinutes);
+          other.sleepDurationMinutes == this.sleepDurationMinutes &&
+          other.eveningTaskSnapshot == this.eveningTaskSnapshot &&
+          other.morningTaskSnapshot == this.morningTaskSnapshot);
 }
 
 class LogsTableCompanion extends UpdateCompanion<Log> {
@@ -1511,6 +1605,8 @@ class LogsTableCompanion extends UpdateCompanion<Log> {
   final Value<DateTime?> bedTime;
   final Value<DateTime?> wakeTime;
   final Value<int?> sleepDurationMinutes;
+  final Value<String?> eveningTaskSnapshot;
+  final Value<String?> morningTaskSnapshot;
   final Value<int> rowid;
   const LogsTableCompanion({
     this.dateKey = const Value.absent(),
@@ -1526,6 +1622,8 @@ class LogsTableCompanion extends UpdateCompanion<Log> {
     this.bedTime = const Value.absent(),
     this.wakeTime = const Value.absent(),
     this.sleepDurationMinutes = const Value.absent(),
+    this.eveningTaskSnapshot = const Value.absent(),
+    this.morningTaskSnapshot = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   LogsTableCompanion.insert({
@@ -1542,6 +1640,8 @@ class LogsTableCompanion extends UpdateCompanion<Log> {
     this.bedTime = const Value.absent(),
     this.wakeTime = const Value.absent(),
     this.sleepDurationMinutes = const Value.absent(),
+    this.eveningTaskSnapshot = const Value.absent(),
+    this.morningTaskSnapshot = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : dateKey = Value(dateKey),
        completedTaskIds = Value(completedTaskIds);
@@ -1559,6 +1659,8 @@ class LogsTableCompanion extends UpdateCompanion<Log> {
     Expression<DateTime>? bedTime,
     Expression<DateTime>? wakeTime,
     Expression<int>? sleepDurationMinutes,
+    Expression<String>? eveningTaskSnapshot,
+    Expression<String>? morningTaskSnapshot,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -1578,6 +1680,10 @@ class LogsTableCompanion extends UpdateCompanion<Log> {
       if (wakeTime != null) 'wake_time': wakeTime,
       if (sleepDurationMinutes != null)
         'sleep_duration_minutes': sleepDurationMinutes,
+      if (eveningTaskSnapshot != null)
+        'evening_task_snapshot': eveningTaskSnapshot,
+      if (morningTaskSnapshot != null)
+        'morning_task_snapshot': morningTaskSnapshot,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -1596,6 +1702,8 @@ class LogsTableCompanion extends UpdateCompanion<Log> {
     Value<DateTime?>? bedTime,
     Value<DateTime?>? wakeTime,
     Value<int?>? sleepDurationMinutes,
+    Value<String?>? eveningTaskSnapshot,
+    Value<String?>? morningTaskSnapshot,
     Value<int>? rowid,
   }) {
     return LogsTableCompanion(
@@ -1612,6 +1720,8 @@ class LogsTableCompanion extends UpdateCompanion<Log> {
       bedTime: bedTime ?? this.bedTime,
       wakeTime: wakeTime ?? this.wakeTime,
       sleepDurationMinutes: sleepDurationMinutes ?? this.sleepDurationMinutes,
+      eveningTaskSnapshot: eveningTaskSnapshot ?? this.eveningTaskSnapshot,
+      morningTaskSnapshot: morningTaskSnapshot ?? this.morningTaskSnapshot,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -1662,6 +1772,16 @@ class LogsTableCompanion extends UpdateCompanion<Log> {
     if (sleepDurationMinutes.present) {
       map['sleep_duration_minutes'] = Variable<int>(sleepDurationMinutes.value);
     }
+    if (eveningTaskSnapshot.present) {
+      map['evening_task_snapshot'] = Variable<String>(
+        eveningTaskSnapshot.value,
+      );
+    }
+    if (morningTaskSnapshot.present) {
+      map['morning_task_snapshot'] = Variable<String>(
+        morningTaskSnapshot.value,
+      );
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -1684,6 +1804,8 @@ class LogsTableCompanion extends UpdateCompanion<Log> {
           ..write('bedTime: $bedTime, ')
           ..write('wakeTime: $wakeTime, ')
           ..write('sleepDurationMinutes: $sleepDurationMinutes, ')
+          ..write('eveningTaskSnapshot: $eveningTaskSnapshot, ')
+          ..write('morningTaskSnapshot: $morningTaskSnapshot, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -2374,6 +2496,8 @@ typedef $$LogsTableTableCreateCompanionBuilder =
       Value<DateTime?> bedTime,
       Value<DateTime?> wakeTime,
       Value<int?> sleepDurationMinutes,
+      Value<String?> eveningTaskSnapshot,
+      Value<String?> morningTaskSnapshot,
       Value<int> rowid,
     });
 typedef $$LogsTableTableUpdateCompanionBuilder =
@@ -2391,6 +2515,8 @@ typedef $$LogsTableTableUpdateCompanionBuilder =
       Value<DateTime?> bedTime,
       Value<DateTime?> wakeTime,
       Value<int?> sleepDurationMinutes,
+      Value<String?> eveningTaskSnapshot,
+      Value<String?> morningTaskSnapshot,
       Value<int> rowid,
     });
 
@@ -2465,6 +2591,16 @@ class $$LogsTableTableFilterComposer
 
   ColumnFilters<int> get sleepDurationMinutes => $composableBuilder(
     column: $table.sleepDurationMinutes,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get eveningTaskSnapshot => $composableBuilder(
+    column: $table.eveningTaskSnapshot,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get morningTaskSnapshot => $composableBuilder(
+    column: $table.morningTaskSnapshot,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -2542,6 +2678,16 @@ class $$LogsTableTableOrderingComposer
     column: $table.sleepDurationMinutes,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get eveningTaskSnapshot => $composableBuilder(
+    column: $table.eveningTaskSnapshot,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get morningTaskSnapshot => $composableBuilder(
+    column: $table.morningTaskSnapshot,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$LogsTableTableAnnotationComposer
@@ -2607,6 +2753,16 @@ class $$LogsTableTableAnnotationComposer
     column: $table.sleepDurationMinutes,
     builder: (column) => column,
   );
+
+  GeneratedColumn<String> get eveningTaskSnapshot => $composableBuilder(
+    column: $table.eveningTaskSnapshot,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get morningTaskSnapshot => $composableBuilder(
+    column: $table.morningTaskSnapshot,
+    builder: (column) => column,
+  );
 }
 
 class $$LogsTableTableTableManager
@@ -2650,6 +2806,8 @@ class $$LogsTableTableTableManager
                 Value<DateTime?> bedTime = const Value.absent(),
                 Value<DateTime?> wakeTime = const Value.absent(),
                 Value<int?> sleepDurationMinutes = const Value.absent(),
+                Value<String?> eveningTaskSnapshot = const Value.absent(),
+                Value<String?> morningTaskSnapshot = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => LogsTableCompanion(
                 dateKey: dateKey,
@@ -2665,6 +2823,8 @@ class $$LogsTableTableTableManager
                 bedTime: bedTime,
                 wakeTime: wakeTime,
                 sleepDurationMinutes: sleepDurationMinutes,
+                eveningTaskSnapshot: eveningTaskSnapshot,
+                morningTaskSnapshot: morningTaskSnapshot,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -2682,6 +2842,8 @@ class $$LogsTableTableTableManager
                 Value<DateTime?> bedTime = const Value.absent(),
                 Value<DateTime?> wakeTime = const Value.absent(),
                 Value<int?> sleepDurationMinutes = const Value.absent(),
+                Value<String?> eveningTaskSnapshot = const Value.absent(),
+                Value<String?> morningTaskSnapshot = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => LogsTableCompanion.insert(
                 dateKey: dateKey,
@@ -2697,6 +2859,8 @@ class $$LogsTableTableTableManager
                 bedTime: bedTime,
                 wakeTime: wakeTime,
                 sleepDurationMinutes: sleepDurationMinutes,
+                eveningTaskSnapshot: eveningTaskSnapshot,
+                morningTaskSnapshot: morningTaskSnapshot,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
