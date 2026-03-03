@@ -5,7 +5,6 @@ import '../../../domain/entities/routine_task.dart';
 import '../../providers/routine_provider.dart';
 import '../../widgets/night_sky_background.dart';
 import '../../widgets/completion_ring.dart';
-import '../../widgets/task_tile.dart';
 import '../../../core/constants.dart';
 
 class EveningRoutineScreen extends ConsumerWidget {
@@ -58,13 +57,16 @@ class EveningRoutineScreen extends ConsumerWidget {
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     children: [
                       for (final task in tasks)
-                        TaskTile(
-                          task: task,
-                          isCompleted: (log?.completedTaskIds ?? [])
+                        CheckboxListTile(
+                          value: (log?.completedTaskIds ?? [])
                               .contains(task.id),
-                          onTap: () => ref
+                          title: Text(task.title),
+                          onChanged: (value) => ref
                                   .read(routineProvider.notifier)
                                   .toggleTask(task.id, log),
+                          activeColor: AppColors.success,
+                          checkColor: Colors.white,
+                          controlAffinity: ListTileControlAffinity.leading,
                         ),
                     ],
                   ),

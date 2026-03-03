@@ -18,13 +18,8 @@ class TaskTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      leading: Checkbox(
-        value: isCompleted,
-        onChanged: (value) => onTap?.call(),
-        activeColor: AppColors.success,
-        checkColor: Colors.white,
-      ),
+    return CheckboxListTile(
+      value: isCompleted,
       title: Text(
         task.title,
         style: TextStyle(
@@ -32,13 +27,16 @@ class TaskTile extends StatelessWidget {
           decoration: isCompleted ? TextDecoration.lineThrough : null,
         ),
       ),
-      trailing: onDelete != null
+      onChanged: (value) => onTap?.call(),
+      activeColor: AppColors.success,
+      checkColor: Colors.white,
+      secondary: onDelete != null
           ? IconButton(
               icon: Icon(Icons.delete, color: AppColors.danger),
               onPressed: onDelete,
+              visualDensity: VisualDensity.compact,
             )
           : null,
-      onTap: onTap,
     );
   }
 }
