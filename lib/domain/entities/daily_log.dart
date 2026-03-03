@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart' show TimeOfDay;
+
 class DailyLog {
   final DateTime date;
   final List<String> completedTaskIds;
@@ -25,7 +27,7 @@ class DailyLog {
     this.eveningCompletedAt,
     this.morningCompletedAt,
     this.napTaken,
-     this.daytimeSleepiness,
+    this.daytimeSleepiness,
     this.feltIrritable,
     this.dreamNote,
     this.bedTime,
@@ -33,6 +35,8 @@ class DailyLog {
     this.sleepDurationMinutes,
     this.eveningTaskSnapshot,
     this.morningTaskSnapshot,
+    this.idealBedTime,
+    this.idealWakeTime,
   });
 
   DailyLog copyWith({

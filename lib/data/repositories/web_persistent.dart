@@ -224,11 +224,6 @@ class WebTaskPersistent implements TaskRepository {
     });
   }
 
-  void _emitCurrentTasks() async {
-    final tasks = await getAllTasks();
-    _controller.add(tasks);
-  }
-
   @override
   Future<void> addTask(RoutineTask task) async {
     final tasks = await getAllTasks();

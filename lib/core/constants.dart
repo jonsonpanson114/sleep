@@ -40,3 +40,21 @@ class AchievementIds {
   static const earlyBed7 = 'early_bed_7';
   static const perfectWeek4 = 'perfect_week_4';
 }
+
+/// Gemini API Configuration
+class GeminiAPIConfig {
+  static const enabled = false; // Set to true when API key is configured
+  static const apiKey = ''; // Add your API key here or set via environment variable
+  static const baseUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent';
+  static const model = 'models/gemini-2.0-flash-exp';
+
+  /// Check if API is properly configured
+  static bool get isConfigured => enabled && apiKey.isNotEmpty;
+
+  /// Get API key from environment variable or fallback to static key
+  static String get apiKeyValue {
+    if (apiKey.isNotEmpty) return apiKey;
+    // Check environment variable (for future web deployment)
+    return const String.fromEnvironment('GEMINI_API_KEY', defaultValue: '');
+  }
+}

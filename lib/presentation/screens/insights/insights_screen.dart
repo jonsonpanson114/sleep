@@ -5,6 +5,9 @@ import '../../widgets/insight_card.dart';
 import '../../../core/constants.dart';
 import '../../widgets/weekly_summary_card.dart';
 import '../../widgets/weekly_pattern_chart.dart';
+import '../../../domain/use_cases/calculate_sleep_analytics.dart';
+import '../../../domain/entities/weekly_summary.dart';
+import '../../../domain/entities/daily_log.dart';
 
 class InsightsScreen extends ConsumerWidget {
   const InsightsScreen({super.key});
@@ -23,6 +26,7 @@ class InsightsScreen extends ConsumerWidget {
         data: (data) {
           final insights = data.insights;
           final summary = data.weeklySummary;
+          final logs = data.logs;
           final pattern = data.weeklyPattern;
           final analytics = data.analytics;
 
@@ -33,7 +37,7 @@ class InsightsScreen extends ConsumerWidget {
               WeeklySummaryCard(summary: summary),
               const SizedBox(height: 20),
               // 実際vs理想の睡眠時間を比較
-              _buildActualVsIdealTimeCard(analytics, summary),
+              _buildActualVsIdealTimeCard(analytics, summary, logs),
               const SizedBox(height: 20),
               // 黄金の睡眠時間（ベストタイム）
               _buildBestTimeCard(analytics),
@@ -91,21 +95,20 @@ class InsightsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildActualVsIdealTimeCard(SleepAnalyticsResult analytics, WeeklySummary summary) {
+  Widget _buildActualVsIdealTimeCard(SleepAnalyticsResult analytics, WeeklySummary summary, List<DailyLog> logs) {
     // 最新のログから実時間を取得
-    final recentLogs = summary.recentLogs;
-    if (recentLogs.isEmpty) return const SizedBox.shrink();
+    if (logs.isEmpty) return const SizedBox.shrink();
 
-    final latestLog = recentLogs.first;
+    final latestLog = logs.first;
     final actualBedTime = latestLog.bedTime;
     final actualWakeTime = latestLog.wakeTime;
     final idealBedTime = latestLog.idealBedTime;
     final idealWakeTime = latestLog.idealWakeTime;
     final fatigueLevel = analytics.fatigueLevel;
-    final suggestEarly = analytics.suggestEarlySleep;
+    final suggestEarlySleep = analytics.suggestEarlySleep;
 
-    return Card(
-      margin: const EdgeInsets.all(8.0, bottom: 16),
+    return Container(
+      margin: const EdgeInsets.all(8.0).copyWith(bottom: 16),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
           colors: [Color(0xFF607D8B), Color(0xFF3B82F6)],
@@ -114,9 +117,11 @@ class InsightsScreen extends ConsumerWidget {
         ),
         borderRadius: BorderRadius.circular(16),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Row(
@@ -152,13 +157,14 @@ class InsightsScreen extends ConsumerWidget {
               const SizedBox(height: 20),
               _buildFatigueStatus(fatigueLevel!),
             ],
-            if (suggestEarlySleep != null && suggestEarlySleep!) ...[
+            if (suggestEarlySleep) ...[
               const SizedBox(height: 16),
               _buildSuggestion(suggestEarlySleep),
             ],
           ],
         ),
-      ),
+        ),
+        ),
     );
   }
 
@@ -175,12 +181,16 @@ class InsightsScreen extends ConsumerWidget {
         const SizedBox(width: 8),
         // 実際時間
         Expanded(
-          child: _buildTimeDisplay(actual != null ? actual : '設定しない'),
+          child: actual != null
+              ? _buildTimeDisplay(actual)
+              : const Text('未記録', style: TextStyle(color: Colors.white70)),
         ),
         const SizedBox(width: 8),
         // 理想時間
         Expanded(
-          child: _buildTimeDisplay(ideal != null ? ideal : '設定しない'),
+          child: ideal != null
+              ? _buildTimeDisplay(ideal)
+              : const Text('未設定', style: TextStyle(color: Colors.white70)),
         ),
         const SizedBox(width: 16),
         // 比較アイコン
@@ -221,12 +231,46 @@ class InsightsScreen extends ConsumerWidget {
     }
   }
 
-  Widget _buildTimeDisplay(String label, dynamic time) {
+  Widget _buildTimeWithLabel(String label, dynamic time) {
     final hour = time.hour.toString().padLeft(2, '0');
     final minute = time.minute.toString().padLeft(2, '0');
     return Column(
       children: [
-        Text(label, style: const TextStyle(fontSize: 11, color: Colors.white70)),
+        Text(label, style: const TextStyle(fontSize: 13, color: Colors.white70)),
+        Text(
+          '$hour:$minute',
+          style: const TextStyle(
+            fontSize: 32,
+            fontWeight: FontWeight.bold,
+            color: AppColors.accent,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTimeDisplay(dynamic time) {
+    if (time is String) {
+      return Column(
+        children: [
+          Text(time, style: const TextStyle(fontSize: 11, color: Colors.white70)),
+          Text(
+            '--:--',
+            style: const TextStyle(
+              fontSize: 28,
+              fontWeight: FontWeight.bold,
+              color: AppColors.textSecondary,
+            ),
+          ),
+        ],
+      );
+    }
+
+    final hour = time.hour.toString().padLeft(2, '0');
+    final minute = time.minute.toString().padLeft(2, '0');
+    return Column(
+      children: [
+        Text(time is DateTime ? '実時間' : '理想', style: const TextStyle(fontSize: 11, color: Colors.white70)),
         Text(
           '$hour:$minute',
           style: const TextStyle(
@@ -332,12 +376,12 @@ class InsightsScreen extends ConsumerWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _buildTimeDisplay('就寝', bestBed),
+                _buildTimeWithLabel('就寝', bestBed),
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16),
                   child: Text('〜', style: TextStyle(fontSize: 24, color: Colors.white)),
                 ),
-                _buildTimeDisplay('起床', bestWake),
+                _buildTimeWithLabel('起床', bestWake),
               ],
             )
           else
