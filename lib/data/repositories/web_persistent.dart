@@ -99,7 +99,7 @@ class WebLogPersistent implements LogRepository {
     final prefs = await SharedPreferences.getInstance();
     final now = log.date;
     final key = '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
-    
+
     final map = {
       'date': log.date.toIso8601String(),
       'completedTaskIds': log.completedTaskIds,
@@ -118,12 +118,9 @@ class WebLogPersistent implements LogRepository {
       'morningTaskSnapshot': log.morningTaskSnapshot,
     };
     await prefs.setString('$_keyPrefix$key', jsonEncode(map));
-    
-    // 現在のログが更新されたことを通知
-    final today = DateTime.now();
-    if (log.date.year == today.year && log.date.month == today.month && log.date.day == today.day) {
-      _controller.add(log);
-    }
+
+    // 保存後にStreamを更新してUIに反映
+    emitTodayLog();
   }
 
   @override
@@ -145,6 +142,14 @@ class WebLogPersistent implements LogRepository {
       _controller.add(log);
     });
     return _controller.stream;
+  }
+
+  // データ更新時にStreamを更新するメソッド
+  void emitTodayLog() {
+    Timer.run(() async {
+      final log = await getTodayLog();
+      _controller.add(log);
+    });
   }
 }
 
@@ -183,9 +188,29 @@ class WebTaskPersistent implements TaskRepository {
 
   Stream<List<RoutineTask>> watchTasksByType(RoutineType type) {
     Timer.run(() => _emitCurrentTasks());
-    
+
     return _controller.stream.map((allTasks) {
       return allTasks.where((t) => t.type == type).toList();
+    });
+  }
+
+  // タスク更新時にStreamを更新するメソッド
+  void emitTasksByType(RoutineType type) {
+    _emitCurrentTasks();
+  }
+
+  void _emitCurrentTasks() {
+    Timer.run(() async {
+      final tasks = await getAllTasks();
+      _controller.add(tasks);
+    });
+  }
+
+  // 全タスクを更新するメソッド
+  void emitAllTasks() {
+    Timer.run(() async {
+      final tasks = await getAllTasks();
+      _controller.add(tasks);
     });
   }
 
@@ -199,6 +224,7 @@ class WebTaskPersistent implements TaskRepository {
     final tasks = await getAllTasks();
     tasks.add(task);
     await _saveAllTasks(tasks);
+    emitTasksByType(task.type);
   }
 
   @override
@@ -206,11 +232,13 @@ class WebTaskPersistent implements TaskRepository {
     final tasks = await getAllTasks();
     tasks.removeWhere((t) => t.id == id);
     await _saveAllTasks(tasks);
+    emitTasksByType(tasks.firstWhere((t) => t.id == id).type);
   }
 
   @override
   Future<void> reorderTasks(List<RoutineTask> tasks) async {
     await _saveAllTasks(tasks);
+    emitAllTasks();
   }
 
   Future<void> _saveAllTasks(List<RoutineTask> tasks) async {
