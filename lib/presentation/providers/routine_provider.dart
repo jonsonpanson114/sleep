@@ -32,7 +32,7 @@ final routineProvider =
     StateNotifierProvider<RoutineNotifier, RoutineState>((ref) {
   final taskRepo = ref.watch(taskRepositoryProvider);
   final logRepo = ref.watch(logRepositoryProvider);
-  return RoutineNotifier(taskRepo, logRepo);
+  return RoutineNotifier(taskRepo, logRepo, ref);
 });
 
 class RoutineState {
@@ -48,10 +48,11 @@ class RoutineState {
 class RoutineNotifier extends StateNotifier<RoutineState> {
   final TaskRepository taskRepo;
   final LogRepository logRepo;
+  final Ref ref;
   final ToggleTask _toggleTask = ToggleTask();
   late final CompleteRoutine _completeRoutine;
 
-  RoutineNotifier(this.taskRepo, this.logRepo)
+  RoutineNotifier(this.taskRepo, this.logRepo, this.ref)
       : super(const RoutineState(eveningTasks: [], morningTasks: [])) {
     _completeRoutine = CompleteRoutine(repo: logRepo);
     _loadTasks();
@@ -71,6 +72,7 @@ class RoutineNotifier extends StateNotifier<RoutineState> {
         );
     final updatedLog = _toggleTask.execute(log, taskId);
     await logRepo.saveLog(updatedLog);
+    ref.invalidate(todayLogProvider);
   }
 
   Future<void> completeEveningRoutine(DailyLog log) async {
@@ -78,6 +80,7 @@ class RoutineNotifier extends StateNotifier<RoutineState> {
     final snapshot = _buildSnapshot(state.eveningTasks, log);
     final updatedLog = log.copyWith(eveningTaskSnapshot: snapshot);
     await _completeRoutine.execute(RoutineType.evening, updatedLog);
+    ref.invalidate(todayLogProvider);
   }
 
   Future<void> completeMorningRoutine(DailyLog log) async {
@@ -85,6 +88,7 @@ class RoutineNotifier extends StateNotifier<RoutineState> {
     final snapshot = _buildSnapshot(state.morningTasks, log);
     final updatedLog = log.copyWith(morningTaskSnapshot: snapshot);
     await _completeRoutine.execute(RoutineType.morning, updatedLog);
+    ref.invalidate(todayLogProvider);
   }
 
   Future<void> completeMorningRoutineWithSleep(
@@ -114,6 +118,7 @@ class RoutineNotifier extends StateNotifier<RoutineState> {
 
     // ルーティンを完了
     await _completeRoutine.execute(RoutineType.morning, updatedLog);
+    ref.invalidate(todayLogProvider);
   }
 
   String _buildSnapshot(List<RoutineTask> tasks, DailyLog log) {
