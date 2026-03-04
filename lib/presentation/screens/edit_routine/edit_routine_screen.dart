@@ -66,7 +66,7 @@ class _EditRoutineScreenState extends ConsumerState<EditRoutineScreen> {
                                 value: isCompleted,
                                 onChanged: (value) async {
                                   if (value == null) return;
-                                  await ref.read(routineProvider.notifier).toggleTask(task.id, log);
+                                  await ref.read(routineProvider.notifier).toggleTask(task.id);
                                 },
                               );
                             },

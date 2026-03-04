@@ -61,6 +61,8 @@ class RoutineNotifier extends StateNotifier<RoutineState> {
   Future<void> _loadTasks() async {
     final evening = await taskRepo.getTasksByType(RoutineType.evening);
     final morning = await taskRepo.getTasksByType(RoutineType.morning);
+    state = RoutineState(eveningTasks: evening, morningTasks: morning);
+  }
   Future<void> toggleTask(String taskId) async {
     final currentLog = await logRepo.getTodayLog();
     final log = currentLog ??
