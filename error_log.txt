@@ -1,0 +1,53 @@
+00:00 +0: loading C:/Users/jonso/OneDrive/Desktop/claude/out/sleep/test/web_persistent_test.dart
+Error: Couldn't resolve the package 'sleep' in 'package:sleep/domain/entities/daily_log.dart'.
+Error: Couldn't resolve the package 'sleep' in 'package:sleep/domain/use_cases/toggle_task.dart'.
+Error: Couldn't resolve the package 'sleep' in 'package:sleep/data/repositories/web_persistent.dart'.
+test/web_persistent_test.dart:4:8: Error: Not found: 'package:sleep/domain/entities/daily_log.dart'
+import 'package:sleep/domain/entities/daily_log.dart';
+       ^
+test/web_persistent_test.dart:5:8: Error: Not found: 'package:sleep/domain/use_cases/toggle_task.dart'
+import 'package:sleep/domain/use_cases/toggle_task.dart';
+       ^
+test/web_persistent_test.dart:6:8: Error: Not found: 'package:sleep/data/repositories/web_persistent.dart'
+import 'package:sleep/data/repositories/web_persistent.dart';
+       ^
+test/web_persistent_test.dart:12:21: Error: Method not found: 'WebLogPersistent'.
+    final logRepo = WebLogPersistent();
+                    ^^^^^^^^^^^^^^^^
+test/web_persistent_test.dart:17:9: Error: Method not found: 'DailyLog'.
+        DailyLog(
+        ^^^^^^^^
+test/web_persistent_test.dart:24:20: Error: Method not found: 'ToggleTask'.
+    final toggle = ToggleTask();
+                   ^^^^^^^^^^
+test/web_persistent_test.dart:35:7: Error: Method not found: 'import'.
+      import('dart:io').then((io) {
+      ^^^^^^
+00:00 +0 -1: loading C:/Users/jonso/OneDrive/Desktop/claude/out/sleep/test/web_persistent_test.dart [E]
+  Failed to load "C:/Users/jonso/OneDrive/Desktop/claude/out/sleep/test/web_persistent_test.dart":
+  Compilation failed for testPath=C:/Users/jonso/OneDrive/Desktop/claude/out/sleep/test/web_persistent_test.dart: Error: Couldn't resolve the package 'sleep' in 'package:sleep/domain/entities/daily_log.dart'.
+  Error: Couldn't resolve the package 'sleep' in 'package:sleep/domain/use_cases/toggle_task.dart'.
+  Error: Couldn't resolve the package 'sleep' in 'package:sleep/data/repositories/web_persistent.dart'.
+  test/web_persistent_test.dart:4:8: Error: Not found: 'package:sleep/domain/entities/daily_log.dart'
+  import 'package:sleep/domain/entities/daily_log.dart';
+         ^
+  test/web_persistent_test.dart:5:8: Error: Not found: 'package:sleep/domain/use_cases/toggle_task.dart'
+  import 'package:sleep/domain/use_cases/toggle_task.dart';
+         ^
+  test/web_persistent_test.dart:6:8: Error: Not found: 'package:sleep/data/repositories/web_persistent.dart'
+  import 'package:sleep/data/repositories/web_persistent.dart';
+         ^
+  test/web_persistent_test.dart:12:21: Error: Method not found: 'WebLogPersistent'.
+      final logRepo = WebLogPersistent();
+                      ^^^^^^^^^^^^^^^^
+  test/web_persistent_test.dart:17:9: Error: Method not found: 'DailyLog'.
+          DailyLog(
+          ^^^^^^^^
+  test/web_persistent_test.dart:24:20: Error: Method not found: 'ToggleTask'.
+      final toggle = ToggleTask();
+                     ^^^^^^^^^^
+  test/web_persistent_test.dart:35:7: Error: Method not found: 'import'.
+        import('dart:io').then((io) {
+        ^^^^^^
+  .
+00:00 +0 -1: Some tests failed.

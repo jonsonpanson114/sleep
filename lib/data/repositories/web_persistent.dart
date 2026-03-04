@@ -68,7 +68,7 @@ class WebLogPersistent implements LogRepository {
     final map = jsonDecode(jsonStr) as Map<String, dynamic>;
     return DailyLog(
       date: DateTime.parse(map['date']),
-      completedTaskIds: (map['completedTaskIds'] as List).cast<String>(),
+      completedTaskIds: (map['completedTaskIds'] as List?)?.map((e) => e.toString()).toList() ?? const [],
       eveningCompleted: map['eveningCompleted'] ?? false,
       morningCompleted: map['morningCompleted'] ?? false,
       eveningCompletedAt: map['eveningCompletedAt'] != null
