@@ -130,7 +130,15 @@ class WebLogPersistent implements LogRepository {
     await prefs.setString('$_keyPrefix$key', jsonEncode(map));
 
     // 保存後にStreamを更新してUIに反映
-    emitTodayLog();
+    _emitTodayLog();
+  }
+
+  // 内部で使用するemitメソッド（private）
+  void _emitTodayLog() {
+    Future.microtask(() async {
+      final log = await getTodayLog();
+      _controller.add(log);
+    });
   }
 
   @override
@@ -147,19 +155,11 @@ class WebLogPersistent implements LogRepository {
   @override
   Stream<DailyLog?> watchTodayLog() {
     // 初回データを流しつつ、その後の更新を待機
-    Timer.run(() async {
+    Future.microtask(() async {
       final log = await getTodayLog();
       _controller.add(log);
     });
     return _controller.stream;
-  }
-
-  // データ更新時にStreamを更新するメソッド
-  void emitTodayLog() {
-    Timer.run(() async {
-      final log = await getTodayLog();
-      _controller.add(log);
-    });
   }
 }
 
