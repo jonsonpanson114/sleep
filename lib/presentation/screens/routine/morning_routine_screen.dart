@@ -50,7 +50,7 @@ class _MorningRoutineScreenState extends ConsumerState<MorningRoutineScreen> {
                           onChanged: (val) {
                             ref
                                 .read(routineProvider.notifier)
-                                .toggleTask(task.id, log);
+                                .toggleTask(task.id);
                           },
                         );
                       },

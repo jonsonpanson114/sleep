@@ -61,9 +61,9 @@ class EveningRoutineScreen extends ConsumerWidget {
                           value: (log?.completedTaskIds ?? [])
                               .contains(task.id),
                           title: Text(task.title),
-                          onChanged: (value) => ref
+                          onTap: () => ref
                                   .read(routineProvider.notifier)
-                                  .toggleTask(task.id, log),
+                                  .toggleTask(task.id),
                           activeColor: AppColors.success,
                           checkColor: Colors.white,
                           controlAffinity: ListTileControlAffinity.leading,
