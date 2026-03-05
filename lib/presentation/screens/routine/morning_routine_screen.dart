@@ -252,7 +252,26 @@ class _SleepTimeDialogState extends State<_SleepTimeDialog> {
               );
               if (picked != null) {
                 setState(() {
-                  bedTime = DateTime(now.year, now.month, now.day - 1, picked.hour, picked.minute);
+                  final now = DateTime.now();
+                  final tempBed = DateTime(now.year, now.month, now.day, picked.hour, picked.minute);
+                  
+                  // 起床時間と比較して、就寝の方が遅い（23時寝、7時起きなど）場合は前日とする
+                  if (wakeTime != null) {
+                    // 時刻部分だけを比較したいので、一旦同じ日のDateTimeで比較
+                    final baseWake = DateTime(tempBed.year, tempBed.month, tempBed.day, wakeTime!.hour, wakeTime!.minute);
+                    if (tempBed.isAfter(baseWake)) {
+                      bedTime = tempBed.subtract(const Duration(days: 1));
+                    } else {
+                      bedTime = tempBed;
+                    }
+                  } else {
+                    // 起床時間が未設定なら、5時以降は前日、それより前は当日深夜とみなす
+                    if (picked.hour >= 5) {
+                      bedTime = tempBed.subtract(const Duration(days: 1));
+                    } else {
+                      bedTime = tempBed;
+                    }
+                  }
                 });
               }
             },
@@ -278,7 +297,19 @@ class _SleepTimeDialogState extends State<_SleepTimeDialog> {
               );
               if (picked != null) {
                 setState(() {
-                  wakeTime = DateTime(now.year, now.month, now.day, picked.hour, picked.minute);
+                  final now = DateTime.now();
+                  final tempWake = DateTime(now.year, now.month, now.day, picked.hour, picked.minute);
+                  wakeTime = tempWake;
+                  
+                  // 起床時間を決めたら、それに合わせて就寝時間の日付も再調整する
+                  if (bedTime != null) {
+                    final baseBed = DateTime(tempWake.year, tempWake.month, tempWake.day, bedTime!.hour, bedTime!.minute);
+                    if (baseBed.isAfter(tempWake)) {
+                      bedTime = baseBed.subtract(const Duration(days: 1));
+                    } else {
+                      bedTime = baseBed;
+                    }
+                  }
                 });
               }
             },

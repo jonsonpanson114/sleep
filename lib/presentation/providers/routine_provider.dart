@@ -133,11 +133,19 @@ class RoutineNotifier extends StateNotifier<RoutineState> {
     // 睡眠時間を計算
     // wakeTime が bedTime より前の場合（日付跨ぎ）、wakeTime を翌日として扱う
     var adjustedWakeTime = wakeTime;
-    if (wakeTime.isBefore(bedTime)) {
+    var adjustedBedTime = bedTime;
+    
+    final rawDuration = wakeTime.difference(bedTime);
+    
+    // もし差分が24時間以上ある場合、UI/データの保存ミスで日付が1日ズレている可能性が高いため補正
+    if (rawDuration.inHours >= 24) {
+      adjustedBedTime = bedTime.add(const Duration(days: 1));
+    } else if (rawDuration.isNegative) {
+      // 逆にマイナスの場合は起床が翌日（日付を跨いでいる）
       adjustedWakeTime = wakeTime.add(const Duration(days: 1));
     }
     
-    final duration = adjustedWakeTime.difference(bedTime);
+    final duration = adjustedWakeTime.difference(adjustedBedTime);
     final sleepDurationMinutes = duration.inMinutes;
 
     // 睡眠時間データのみを更新（ルーティン完了フラグは触らない）
