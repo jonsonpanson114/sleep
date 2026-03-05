@@ -56,9 +56,28 @@ class CalculateSleepAnalytics {
     TimeOfDay? bestWake;
 
     if (goodDays.isNotEmpty) {
-      // 簡易的にコンディションが良い日の平均などを取る (本来は就寝時間の記録が必要だが、今は設定値ベースで推論)
-      bestBed = currentSettings.bedtime; // 実測値がDBにあればそれを使うが、今は設定を調整する
-      bestWake = currentSettings.wakeTime;
+      // コンディションが良い日の実測値の平均を取る（簡易版）
+      int totalBedMinutes = 0;
+      int totalWakeMinutes = 0;
+      int count = 0;
+
+      for (final l in goodDays) {
+        if (l.bedTime != null && l.wakeTime != null) {
+          totalBedMinutes += l.bedTime!.hour * 60 + l.bedTime!.minute;
+          totalWakeMinutes += l.wakeTime!.hour * 60 + l.wakeTime!.minute;
+          count++;
+        }
+      }
+
+      if (count > 0) {
+        final avgBed = totalBedMinutes ~/ count;
+        final avgWake = totalWakeMinutes ~/ count;
+        bestBed = TimeOfDay(hour: (avgBed ~/ 60) % 24, minute: avgBed % 60);
+        bestWake = TimeOfDay(hour: (avgWake ~/ 60) % 24, minute: avgWake % 60);
+      } else {
+        bestBed = currentSettings.bedtime;
+        bestWake = currentSettings.wakeTime;
+      }
     }
 
     String message = fatigue > 0.4 ? '最近、少し疲れが溜まっていませんか？ 無理は禁物です。' : '順調なリズムですね。この調子でいきましょう。';

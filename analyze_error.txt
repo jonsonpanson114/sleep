@@ -1,0 +1,131 @@
+Analyzing sleep...                                              
+
+   info - Use 'const' with the constructor to improve performance - lib\app\theme.dart:13:20 - prefer_const_constructors
+   info - 'package:drift/web.dart' is deprecated and shouldn't be used. This variant of web support has downsides compared to `package:drift/wasm.dart` and is in a deprecated bugfix-only mode. Please consider migrating to the new web APIS: https://drift.simonbinder.eu/web - lib\data\database\connection\web.dart:2:1 - deprecated_member_use
+warning - Unused import: 'package:drift/drift.dart' - lib\data\repositories\achievement_repository_impl.dart:1:8 - unused_import
+   info - Use 'const' with the constructor to improve performance - lib\data\repositories\web_mocks.dart:11:27 - prefer_const_constructors
+   info - Unnecessary braces in a string interpolation - lib\data\services\ai_service.dart:236:25 - unnecessary_brace_in_string_interps
+   info - Use 'const' for final variables initialized to a constant value - lib\presentation\providers\badges_provider.dart:12:3 - prefer_const_declarations
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\badges\badges_screen.dart:23:20 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\badges\badges_screen.dart:24:22 - prefer_const_constructors
+   info - Use 'const' literals as arguments to constructors of '@immutable' classes - lib\presentation\screens\badges\badges_screen.dart:26:27 - prefer_const_literals_to_create_immutables
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\screens\history\history_screen.dart:170:38 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\screens\history\history_screen.dart:171:39 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\screens\history\history_screen.dart:176:56 - deprecated_member_use
+   info - Unnecessary 'const' keyword - lib\presentation\screens\insights\insights_screen.dart:67:23 - unnecessary_const
+   info - Unnecessary 'const' keyword - lib\presentation\screens\insights\insights_screen.dart:68:23 - unnecessary_const
+   info - Unnecessary 'const' keyword - lib\presentation\screens\insights\insights_screen.dart:69:23 - unnecessary_const
+   info - Unnecessary 'const' keyword - lib\presentation\screens\insights\insights_screen.dart:70:23 - unnecessary_const
+   info - Unnecessary 'const' keyword - lib\presentation\screens\insights\insights_screen.dart:77:23 - unnecessary_const
+   info - Unnecessary 'const' keyword - lib\presentation\screens\insights\insights_screen.dart:78:23 - unnecessary_const
+warning - The operand can't be 'null', so the condition is always 'true' - lib\presentation\screens\insights\insights_screen.dart:156:30 - unnecessary_null_comparison
+warning - The '!' will have no effect because the receiver can't be null - lib\presentation\screens\insights\insights_screen.dart:158:47 - unnecessary_non_null_assertion
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\insights\insights_screen.dart:217:14 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\insights\insights_screen.dart:257:11 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\insights\insights_screen.dart:319:14 - prefer_const_constructors
+   info - Use 'const' literals as arguments to constructors of '@immutable' classes - lib\presentation\screens\insights\insights_screen.dart:320:19 - prefer_const_literals_to_create_immutables
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\insights\insights_screen.dart:323:11 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\insights\insights_screen.dart:324:20 - prefer_const_constructors
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\screens\insights\insights_screen.dart:351:33 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\screens\routine\morning_routine_screen.dart:107:34 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\screens\routine\morning_routine_screen.dart:109:53 - deprecated_member_use
+warning - The value of the local variable 'now' isn't used - lib\presentation\screens\routine\morning_routine_screen.dart:298:21 - unused_local_variable
+warning - The value of the local variable 'now' isn't used - lib\presentation\screens\routine\morning_routine_screen.dart:320:21 - unused_local_variable
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\screens\routine\morning_routine_screen.dart:337:41 - deprecated_member_use
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:23:20 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:24:22 - prefer_const_constructors
+   info - Use 'const' literals as arguments to constructors of '@immutable' classes - lib\presentation\screens\weekly_report\weekly_report_screen.dart:26:27 - prefer_const_literals_to_create_immutables
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:80:13 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:82:22 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:89:26 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:106:19 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:108:28 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:126:13 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:128:22 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:133:22 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:140:13 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:142:22 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:147:22 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:166:13 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:168:22 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:175:21 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:177:30 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:181:30 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:187:21 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:189:30 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:196:21 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:198:30 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:202:30 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:208:21 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:210:30 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:230:13 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:232:22 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:295:13 - prefer_const_constructors
+   info - Use 'const' literals as arguments to constructors of '@immutable' classes - lib\presentation\screens\weekly_report\weekly_report_screen.dart:296:25 - prefer_const_literals_to_create_immutables
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:314:22 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\widgets\badge_tile.dart:27:22 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\widgets\badge_tile.dart:42:22 - prefer_const_constructors
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\badge_tile.dart:55:50 - deprecated_member_use
+   info - Use 'const' with the constructor to improve performance - lib\presentation\widgets\badge_tile.dart:58:24 - prefer_const_constructors
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\condition_toggle.dart:55:45 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\condition_toggle.dart:80:76 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\insight_card.dart:26:34 - deprecated_member_use
+   info - Use 'const' with the constructor to improve performance - lib\presentation\widgets\insight_card.dart:53:28 - prefer_const_constructors
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\mission_card.dart:19:33 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\mission_card.dart:25:37 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\mission_card.dart:26:35 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\mission_card.dart:79:48 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\mission_card.dart:81:67 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\mission_card.dart:104:67 - deprecated_member_use
+   info - Use 'const' with the constructor to improve performance - lib\presentation\widgets\progress_chart.dart:25:13 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\widgets\progress_chart.dart:27:22 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\widgets\progress_chart.dart:46:29 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\widgets\progress_chart.dart:47:31 - prefer_const_constructors
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\saito_daily_card.dart:39:47 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\saito_daily_card.dart:76:45 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\saito_daily_card.dart:78:64 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\sleep_status_banner.dart:26:31 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\sleep_status_banner.dart:31:37 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\stamp_calendar.dart:132:28 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\stamp_calendar.dart:144:52 - deprecated_member_use
+   info - Use 'const' with the constructor to improve performance - lib\presentation\widgets\streak_badge.dart:14:9 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\widgets\streak_badge.dart:26:22 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\widgets\task_tile.dart:35:21 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\widgets\time_picker_tile.dart:54:20 - prefer_const_constructors
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\weekly_pattern_chart.dart:110:54 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\weekly_pattern_chart.dart:133:42 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\weekly_pattern_chart.dart:152:22 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\weekly_pattern_chart.dart:154:41 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\weekly_summary_card.dart:13:31 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\weekly_summary_card.dart:16:50 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\weekly_summary_card.dart:32:45 - deprecated_member_use
+   info - The imported package 'sleep' isn't a dependency of the importing package - test\web_persistent_test.dart:4:8 - depend_on_referenced_packages
+  error - Target of URI doesn't exist: 'package:sleep/domain/entities/daily_log.dart' - test\web_persistent_test.dart:4:8 - uri_does_not_exist
+   info - The imported package 'sleep' isn't a dependency of the importing package - test\web_persistent_test.dart:5:8 - depend_on_referenced_packages
+  error - Target of URI doesn't exist: 'package:sleep/domain/use_cases/toggle_task.dart' - test\web_persistent_test.dart:5:8 - uri_does_not_exist
+   info - The imported package 'sleep' isn't a dependency of the importing package - test\web_persistent_test.dart:6:8 - depend_on_referenced_packages
+  error - Target of URI doesn't exist: 'package:sleep/data/repositories/web_persistent.dart' - test\web_persistent_test.dart:6:8 - uri_does_not_exist
+  error - The function 'WebLogPersistent' isn't defined - test\web_persistent_test.dart:12:21 - undefined_function
+  error - The function 'DailyLog' isn't defined - test\web_persistent_test.dart:17:9 - undefined_function
+  error - The function 'ToggleTask' isn't defined - test\web_persistent_test.dart:24:20 - undefined_function
+   info - Don't invoke 'print' in production code - test\web_persistent_test.dart:26:5 - avoid_print
+   info - Don't invoke 'print' in production code - test\web_persistent_test.dart:30:7 - avoid_print
+   info - Don't invoke 'print' in production code - test\web_persistent_test.dart:32:7 - avoid_print
+   info - Don't invoke 'print' in production code - test\web_persistent_test.dart:33:7 - avoid_print
+  error - The function 'import' isn't defined - test\web_persistent_test.dart:35:7 - undefined_function
+   info - Don't invoke 'print' in production code - test\web_persistent_test.dart:38:7 - avoid_print
+   info - The imported package 'sleep' isn't a dependency of the importing package - test_script.dart:4:8 - depend_on_referenced_packages
+  error - Target of URI doesn't exist: 'package:sleep/domain/entities/daily_log.dart' - test_script.dart:4:8 - uri_does_not_exist
+   info - The imported package 'sleep' isn't a dependency of the importing package - test_script.dart:5:8 - depend_on_referenced_packages
+  error - Target of URI doesn't exist: 'package:sleep/domain/use_cases/toggle_task.dart' - test_script.dart:5:8 - uri_does_not_exist
+   info - The imported package 'sleep' isn't a dependency of the importing package - test_script.dart:6:8 - depend_on_referenced_packages
+  error - Target of URI doesn't exist: 'package:sleep/data/repositories/web_persistent.dart' - test_script.dart:6:8 - uri_does_not_exist
+warning - The member 'setMockInitialValues' can only be used within 'package:shared_preferences/src/shared_preferences_legacy.dart' or a test - test_script.dart:10:21 - invalid_use_of_visible_for_testing_member
+  error - The function 'WebLogPersistent' isn't defined - test_script.dart:11:19 - undefined_function
+  error - The function 'DailyLog' isn't defined - test_script.dart:16:9 - undefined_function
+  error - The function 'ToggleTask' isn't defined - test_script.dart:23:20 - undefined_function
+   info - Don't invoke 'print' in production code - test_script.dart:25:5 - avoid_print
+   info - Don't invoke 'print' in production code - test_script.dart:28:5 - avoid_print
+   info - Don't invoke 'print' in production code - test_script.dart:30:5 - avoid_print
+   info - Don't invoke 'print' in production code - test_script.dart:33:5 - avoid_print
+

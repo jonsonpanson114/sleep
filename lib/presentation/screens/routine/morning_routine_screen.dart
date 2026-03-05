@@ -37,9 +37,10 @@ class _MorningRoutineScreenState extends ConsumerState<MorningRoutineScreen> {
 
               return Column(
                 children: [
+                  _buildSleepTimeSection(context, log),
                   Expanded(
                     child: ListView.builder(
-                      padding: const EdgeInsets.all(16),
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
                       itemCount: tasks.length,
                       itemBuilder: (context, index) {
                         final task = tasks[index];
@@ -96,33 +97,113 @@ class _MorningRoutineScreenState extends ConsumerState<MorningRoutineScreen> {
     );
   }
 
-  Future<void> _showCompletionDialog(BuildContext context, DailyLog log) async {
+  Widget _buildSleepTimeSection(BuildContext context, DailyLog? log) {
+    final hasSleepData = log?.bedTime != null && log?.wakeTime != null;
+    
+    return Container(
+      margin: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.primary.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.primary.withOpacity(0.2)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                '昨夜の睡眠',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              ),
+              TextButton.icon(
+                onPressed: () => _showSleepInputDialog(context, log),
+                icon: Icon(hasSleepData ? Icons.edit : Icons.add, size: 18),
+                label: Text(hasSleepData ? '編集' : '記録する'),
+              ),
+            ],
+          ),
+          if (hasSleepData) ...[
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                const Icon(Icons.nightlight_round, size: 16, color: Colors.indigo),
+                const SizedBox(width: 4),
+                Text('${log!.bedTime!.hour.toString().padLeft(2, '0')}:${log.bedTime!.minute.toString().padLeft(2, '0')}'),
+                const Text('  〜  '),
+                const Icon(Icons.wb_sunny, size: 16, color: Colors.orange),
+                const SizedBox(width: 4),
+                Text('${log.wakeTime!.hour.toString().padLeft(2, '0')}:${log.wakeTime!.minute.toString().padLeft(2, '0')}'),
+                const Spacer(),
+                Text(
+                  '睡眠時間: ${log.sleepDurationMinutes != null ? (log.sleepDurationMinutes! / 60).floor() : 0}時間${log.sleepDurationMinutes != null ? log.sleepDurationMinutes! % 60 : 0}分',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          ] else
+            const Text('睡眠時間がまだ記録されていません', style: TextStyle(color: Colors.grey, fontSize: 13)),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _showSleepInputDialog(BuildContext context, DailyLog? log) async {
     final result = await showDialog<(DateTime?, DateTime?, TimeOfDay?, TimeOfDay?)>(
       context: context,
-      builder: (context) => _SleepTimeDialog(),
+      builder: (context) => _SleepTimeDialog(
+        initialBedTime: log?.bedTime,
+        initialWakeTime: log?.wakeTime,
+        initialIdealBedTime: log?.idealBedTime,
+        initialIdealWakeTime: log?.idealWakeTime,
+      ),
     );
 
-    if (result != null) {
-      final bedTime = result.$1;
-      final wakeTime = result.$2;
-      final idealBedTime = result.$3;
-      final idealWakeTime = result.$4;
+    if (result != null && result.$1 != null && result.$2 != null) {
+      await ref.read(routineProvider.notifier).updateSleepTime(
+            log: log ?? DailyLog(date: DateTime.now(), completedTaskIds: []),
+            bedTime: result.$1!,
+            wakeTime: result.$2!,
+            idealBedTime: result.$3,
+            idealWakeTime: result.$4,
+          );
+    }
+  }
 
-      if (bedTime != null && wakeTime != null) {
-        await ref
-            .read(routineProvider.notifier)
-            .completeMorningRoutineWithSleep(log, bedTime, wakeTime, idealBedTime, idealWakeTime);
-      } else {
-        await ref.read(routineProvider.notifier).completeMorningRoutine(log);
-      }
-      if (context.mounted) {
-        Navigator.pop(context);
-      }
+  Future<void> _showCompletionDialog(BuildContext context, DailyLog log) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('ルーティン完了'),
+        content: const Text('朝のルーティンを完了状態にしますか？'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('キャンセル')),
+          TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('完了')),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      await ref.read(routineProvider.notifier).completeMorningRoutine(log);
     }
   }
 }
 
 class _SleepTimeDialog extends StatefulWidget {
+  final DateTime? initialBedTime;
+  final DateTime? initialWakeTime;
+  final TimeOfDay? initialIdealBedTime;
+  final TimeOfDay? initialIdealWakeTime;
+
+  const _SleepTimeDialog({
+    this.initialBedTime,
+    this.initialWakeTime,
+    this.initialIdealBedTime,
+    this.initialIdealWakeTime,
+  });
+
   @override
   State<_SleepTimeDialog> createState() => _SleepTimeDialogState();
 }
@@ -132,6 +213,15 @@ class _SleepTimeDialogState extends State<_SleepTimeDialog> {
   DateTime? wakeTime;
   TimeOfDay? idealBedTime;
   TimeOfDay? idealWakeTime;
+
+  @override
+  void initState() {
+    super.initState();
+    bedTime = widget.initialBedTime;
+    wakeTime = widget.initialWakeTime;
+    idealBedTime = widget.initialIdealBedTime;
+    idealWakeTime = widget.initialIdealWakeTime;
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -123,6 +123,36 @@ class RoutineNotifier extends StateNotifier<RoutineState> {
     ref.invalidate(todayLogProvider);
   }
 
+  Future<void> updateSleepTime({
+    required DailyLog log,
+    required DateTime bedTime,
+    required DateTime wakeTime,
+    TimeOfDay? idealBedTime,
+    TimeOfDay? idealWakeTime,
+  }) async {
+    // 睡眠時間を計算
+    // wakeTime が bedTime より前の場合（日付跨ぎ）、wakeTime を翌日として扱う
+    var adjustedWakeTime = wakeTime;
+    if (wakeTime.isBefore(bedTime)) {
+      adjustedWakeTime = wakeTime.add(const Duration(days: 1));
+    }
+    
+    final duration = adjustedWakeTime.difference(bedTime);
+    final sleepDurationMinutes = duration.inMinutes;
+
+    // 睡眠時間データのみを更新（ルーティン完了フラグは触らない）
+    final updatedLog = log.copyWith(
+      bedTime: bedTime,
+      wakeTime: wakeTime,
+      sleepDurationMinutes: sleepDurationMinutes,
+      idealBedTime: idealBedTime,
+      idealWakeTime: idealWakeTime,
+    );
+
+    await logRepo.saveLog(updatedLog);
+    ref.invalidate(todayLogProvider);
+  }
+
   String _buildSnapshot(List<RoutineTask> tasks, DailyLog log) {
     final list = tasks.map((t) => {
       'title': t.title,

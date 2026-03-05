@@ -143,13 +143,49 @@ class WebLogPersistent implements LogRepository {
 
   @override
   Future<List<DailyLog>> getRecentLogs(int days) async {
-    // Simplified for web mock-persistence
-    return [];
+    final prefs = await SharedPreferences.getInstance();
+    final keys = prefs.getKeys().where((k) => k.startsWith(_keyPrefix)).toList();
+    
+    final logs = <DailyLog>[];
+    for (final key in keys) {
+      final jsonStr = prefs.getString(key);
+      if (jsonStr != null) {
+        final map = jsonDecode(jsonStr) as Map<String, dynamic>;
+        logs.add(DailyLog(
+          date: DateTime.parse(map['date']),
+          completedTaskIds: (map['completedTaskIds'] as List?)?.map((e) => e.toString()).toList() ?? const [],
+          eveningCompleted: map['eveningCompleted'] ?? false,
+          morningCompleted: map['morningCompleted'] ?? false,
+          eveningCompletedAt: map['eveningCompletedAt'] != null ? DateTime.parse(map['eveningCompletedAt']) : null,
+          morningCompletedAt: map['morningCompletedAt'] != null ? DateTime.parse(map['morningCompletedAt']) : null,
+          napTaken: map['napTaken'],
+          daytimeSleepiness: map['daytimeSleepiness'],
+          feltIrritable: map['feltIrritable'],
+          dreamNote: map['dreamNote'],
+          bedTime: map['bedTime'] != null ? DateTime.parse(map['bedTime']) : null,
+          wakeTime: map['wakeTime'] != null ? DateTime.parse(map['wakeTime']) : null,
+          sleepDurationMinutes: map['sleepDurationMinutes'],
+          eveningTaskSnapshot: map['eveningTaskSnapshot'],
+          morningTaskSnapshot: map['morningTaskSnapshot'],
+          idealBedTime: map['idealBedTimeHour'] != null && map['idealBedTimeMinute'] != null
+              ? TimeOfDay(hour: map['idealBedTimeHour'], minute: map['idealBedTimeMinute'])
+              : null,
+          idealWakeTime: map['idealWakeTimeHour'] != null && map['idealWakeTimeMinute'] != null
+              ? TimeOfDay(hour: map['idealWakeTimeHour'], minute: map['idealWakeTimeMinute'])
+              : null,
+        ));
+      }
+    }
+    
+    logs.sort((a, b) => b.date.compareTo(a.date));
+    return logs.take(days).toList();
   }
 
   @override
   Future<List<DailyLog>> getLogsInRange(DateTime start, DateTime end) async {
-    return [];
+    final all = await getRecentLogs(365); // 1年分
+    return all.where((l) => l.date.isAfter(start.subtract(const Duration(seconds: 1))) && 
+                           l.date.isBefore(end.add(const Duration(seconds: 1)))).toList();
   }
 
   @override
