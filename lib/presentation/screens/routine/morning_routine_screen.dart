@@ -77,7 +77,7 @@ class _MorningRoutineScreenState extends ConsumerState<MorningRoutineScreen> {
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: !(log?.morningCompleted ?? false)
-                                ? () => _showCompletionDialog(context, log!)
+                                ? () => _showCompletionDialog(context, log ?? DailyLog(date: DateTime.now()))
                                 : null,
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.primary,

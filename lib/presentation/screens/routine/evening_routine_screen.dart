@@ -21,10 +21,8 @@ class EveningRoutineScreen extends ConsumerWidget {
     final completionRatio =
         tasks.isEmpty ? 0.0 : completedIds.length / tasks.length;
 
-    final allDone = tasks.isNotEmpty &&
-        tasks.every((t) => completedIds.contains(t.id));
     final canComplete =
-        allDone && todayLog != null && !todayLog.eveningCompleted;
+        todayLog != null && !todayLog.eveningCompleted;
 
     return Scaffold(
       appBar: AppBar(
