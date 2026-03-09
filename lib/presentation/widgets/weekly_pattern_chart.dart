@@ -56,6 +56,7 @@ class WeeklyPatternChart extends StatelessWidget {
                   barTouchData: BarTouchData(
                     touchTooltipData: BarTouchTooltipData(
                       getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                        if (groupIndex < 0 || groupIndex >= pattern.byDayOfWeek.length) return null;
                         final stat = pattern.byDayOfWeek[groupIndex];
                         return BarTooltipItem(
                           '${stat.label}曜\n${(stat.completionRate * 100).toInt()}%',
@@ -70,7 +71,9 @@ class WeeklyPatternChart extends StatelessWidget {
                       sideTitles: SideTitles(
                         showTitles: true,
                         getTitlesWidget: (value, meta) {
-                          final day = pattern.byDayOfWeek[value.toInt()];
+                          final index = value.toInt();
+                          if (index < 0 || index >= pattern.byDayOfWeek.length) return const SizedBox.shrink();
+                          final day = pattern.byDayOfWeek[index];
                           return Padding(
                             padding: const EdgeInsets.only(top: 8),
                             child: Text(

@@ -135,14 +135,14 @@ class _MorningRoutineScreenState extends ConsumerState<MorningRoutineScreen> {
               children: [
                 const Icon(Icons.nightlight_round, size: 16, color: Colors.indigo),
                 const SizedBox(width: 4),
-                Text('${log!.bedTime!.hour.toString().padLeft(2, '0')}:${log.bedTime!.minute.toString().padLeft(2, '0')}'),
+                Text(log!.bedTime != null ? '${log.bedTime!.hour.toString().padLeft(2, '0')}:${log.bedTime!.minute.toString().padLeft(2, '0')}' : '--:--'),
                 const Text('  〜  '),
                 const Icon(Icons.wb_sunny, size: 16, color: Colors.orange),
                 const SizedBox(width: 4),
-                Text('${log.wakeTime!.hour.toString().padLeft(2, '0')}:${log.wakeTime!.minute.toString().padLeft(2, '0')}'),
+                Text(log.wakeTime != null ? '${log.wakeTime!.hour.toString().padLeft(2, '0')}:${log.wakeTime!.minute.toString().padLeft(2, '0')}' : '--:--'),
                 const Spacer(),
                 Text(
-                  '睡眠時間: ${log.sleepDurationMinutes != null ? (log.sleepDurationMinutes! / 60).floor() : 0}時間${log.sleepDurationMinutes != null ? log.sleepDurationMinutes! % 60 : 0}分',
+                  '睡眠時間: ${_formatDuration(log.sleepDurationMinutes)}',
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
               ],
@@ -397,9 +397,19 @@ class _SleepTimeDialogState extends State<_SleepTimeDialog> {
   }
 
   String _calculateSleepDuration(DateTime bedTime, DateTime wakeTime) {
-    final duration = wakeTime.difference(bedTime);
-    final hours = duration.inHours;
-    final minutes = duration.inMinutes % 60;
+    var diff = wakeTime.difference(bedTime);
+    if (diff.isNegative) {
+      diff = wakeTime.add(const Duration(days: 1)).difference(bedTime);
+    }
+    final hours = diff.inHours;
+    final minutes = diff.inMinutes % 60;
     return '$hours時間${minutes > 0 ? ' $minutes分' : ''}';
+  }
+
+  String _formatDuration(int? minutes) {
+    if (minutes == null || minutes < 0) return '0時間';
+    final h = minutes ~/ 60;
+    final m = minutes % 60;
+    return '$h時間${m > 0 ? ' $m分' : ''}';
   }
 }

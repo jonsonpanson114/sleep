@@ -78,17 +78,19 @@ class RoutineNotifier extends StateNotifier<RoutineState> {
   }
 
   Future<void> completeEveningRoutine(DailyLog log) async {
-    if (log.eveningCompleted) return;
-    final snapshot = _buildSnapshot(state.eveningTasks, log);
-    final updatedLog = log.copyWith(eveningTaskSnapshot: snapshot);
+    final latestLog = await logRepo.getTodayLog() ?? log;
+    if (latestLog.eveningCompleted) return;
+    final snapshot = _buildSnapshot(state.eveningTasks, latestLog);
+    final updatedLog = latestLog.copyWith(eveningTaskSnapshot: snapshot);
     await _completeRoutine.execute(RoutineType.evening, updatedLog);
     ref.invalidate(todayLogProvider);
   }
 
   Future<void> completeMorningRoutine(DailyLog log) async {
-    if (log.morningCompleted) return;
-    final snapshot = _buildSnapshot(state.morningTasks, log);
-    final updatedLog = log.copyWith(morningTaskSnapshot: snapshot);
+    final latestLog = await logRepo.getTodayLog() ?? log;
+    if (latestLog.morningCompleted) return;
+    final snapshot = _buildSnapshot(state.morningTasks, latestLog);
+    final updatedLog = latestLog.copyWith(morningTaskSnapshot: snapshot);
     await _completeRoutine.execute(RoutineType.morning, updatedLog);
     ref.invalidate(todayLogProvider);
   }

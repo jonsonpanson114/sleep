@@ -87,10 +87,16 @@ class CalculateCorrelation {
   }
 
   bool _isEarlyBedtime(DailyLog log) {
-    if (log.eveningCompletedAt == null) return false;
-    return log.eveningCompletedAt!.hour < 22 ||
-        (log.eveningCompletedAt!.hour == 22 &&
-            log.eveningCompletedAt!.minute <= 30);
+    // 実際の実測就寝時間があればそれを使う、なければルーティン完了時間を使う
+    final bedTime = log.bedTime ?? log.eveningCompletedAt;
+    if (bedTime == null) return false;
+    
+    final hour = bedTime.hour;
+    final minute = bedTime.minute;
+    // 18:00 〜 22:30 を「早期」とする
+    if (hour < 18 || hour > 22) return false;
+    if (hour == 22 && minute > 30) return false;
+    return true;
   }
 
   int _countCondition(List<DailyLog> logs, bool Function(DailyLog) condition) {

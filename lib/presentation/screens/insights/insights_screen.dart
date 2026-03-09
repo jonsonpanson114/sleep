@@ -224,11 +224,7 @@ class InsightsScreen extends ConsumerWidget {
           ideal != null && actual != null
               ? Icons.compare
               : Icons.compare_arrows,
-          color: ideal != null && actual != null && ideal.hour < actual.hour
-              ? Colors.green
-              : ideal != null && actual != null && ideal.hour > actual.hour
-              ? Colors.red
-              : Colors.white70,
+          color: Colors.white,
           size: 24,
         ),
       ],
@@ -236,22 +232,31 @@ class InsightsScreen extends ConsumerWidget {
   }
 
   Widget _buildAnalysisMessage(DateTime actual, TimeOfDay ideal, String type) {
-    final hourDiff = ideal.hour - actual.hour;
-    final minuteDiff = ideal.minute - actual.minute;
+    final actualMinutes = actual.hour * 60 + actual.minute;
+    final idealMinutes = ideal.hour * 60 + ideal.minute;
+    
+    // 円形差分計算 (1440分 = 24時間)
+    int diff = (idealMinutes - actualMinutes).abs();
+    if (diff > 720) {
+      diff = 1440 - diff;
+    }
+    
+    final hourDiff = diff ~/ 60;
+    final minuteDiff = diff % 60;
 
-    if (hourDiff.abs() <= 1 && minuteDiff.abs() <= 30) {
-      return Text(
-        '✓ 1時間以内の差異',
-        style: const TextStyle(color: Colors.green, fontSize: 12),
+    if (hourDiff == 0 && minuteDiff <= 30) {
+      return const Text(
+        '✓ 30分以内の誤差（理想的！）',
+        style: TextStyle(color: Colors.green, fontSize: 12, fontWeight: FontWeight.bold),
       );
-    } else if (hourDiff.abs() <= 2) {
+    } else if (hourDiff < 2) {
       return Text(
-        '${hourDiff.abs()}時間の差異',
+        '誤差 $hourDiff時間 $minuteDiff分（許容範囲）',
         style: const TextStyle(color: Colors.orange, fontSize: 12),
       );
     } else {
       return Text(
-        '${hourDiff.abs()}時間以上の差異',
+        '誤差 $hourDiff時間 $minuteDiff分',
         style: const TextStyle(color: Colors.red, fontSize: 12),
       );
     }

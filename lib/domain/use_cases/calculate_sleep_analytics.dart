@@ -1,3 +1,4 @@
+import 'dart:math';
 import '../entities/daily_log.dart';
 import '../../domain/entities/app_settings.dart';
 import 'package:flutter/material.dart' show TimeOfDay;
@@ -55,30 +56,46 @@ class CalculateSleepAnalytics {
     TimeOfDay? bestBed;
     TimeOfDay? bestWake;
 
-    if (goodDays.isNotEmpty) {
-      // コンディションが良い日の実測値の平均を取る（簡易版）
-      int totalBedMinutes = 0;
-      int totalWakeMinutes = 0;
-      int count = 0;
+      if (goodDays.isNotEmpty) {
+        double bedSumSin = 0;
+        double bedSumCos = 0;
+        double wakeSumSin = 0;
+        double wakeSumCos = 0;
+        int count = 0;
 
-      for (final l in goodDays) {
-        if (l.bedTime != null && l.wakeTime != null) {
-          totalBedMinutes += l.bedTime!.hour * 60 + l.bedTime!.minute;
-          totalWakeMinutes += l.wakeTime!.hour * 60 + l.wakeTime!.minute;
-          count++;
+        for (final l in goodDays) {
+          if (l.bedTime != null && l.wakeTime != null) {
+            // 分単位をラジアンに変換 (1440分 = 2πラジアン)
+            final bedMinutes = l.bedTime!.hour * 60 + l.bedTime!.minute;
+            final wakeMinutes = l.wakeTime!.hour * 60 + l.wakeTime!.minute;
+            
+            bedSumSin += sin(bedMinutes * 2 * pi / 1440);
+            bedSumCos += cos(bedMinutes * 2 * pi / 1440);
+            wakeSumSin += sin(wakeMinutes * 2 * pi / 1440);
+            wakeSumCos += cos(wakeMinutes * 2 * pi / 1440);
+            count++;
+          }
+        }
+
+        if (count > 0) {
+          final avgBedRad = atan2(bedSumSin / count, bedSumCos / count);
+          final avgWakeRad = atan2(wakeSumSin / count, wakeSumCos / count);
+          
+          // ラジアンを分に戻す
+          int avgBedMin = (avgBedRad * 1440 / (2 * pi)).round();
+          int avgWakeMin = (avgWakeRad * 1440 / (2 * pi)).round();
+          
+          // マイナス値を補正
+          if (avgBedMin < 0) avgBedMin += 1440;
+          if (avgWakeMin < 0) avgWakeMin += 1440;
+          
+          bestBed = TimeOfDay(hour: (avgBedMin ~/ 60) % 24, minute: avgBedMin % 60);
+          bestWake = TimeOfDay(hour: (avgWakeMin ~/ 60) % 24, minute: avgWakeMin % 60);
+        } else {
+          bestBed = currentSettings.bedtime;
+          bestWake = currentSettings.wakeTime;
         }
       }
-
-      if (count > 0) {
-        final avgBed = totalBedMinutes ~/ count;
-        final avgWake = totalWakeMinutes ~/ count;
-        bestBed = TimeOfDay(hour: (avgBed ~/ 60) % 24, minute: avgBed % 60);
-        bestWake = TimeOfDay(hour: (avgWake ~/ 60) % 24, minute: avgWake % 60);
-      } else {
-        bestBed = currentSettings.bedtime;
-        bestWake = currentSettings.wakeTime;
-      }
-    }
 
     String message = fatigue > 0.4 ? '最近、少し疲れが溜まっていませんか？ 無理は禁物です。' : '順調なリズムですね。この調子でいきましょう。';
     if (suggestEarly) {
