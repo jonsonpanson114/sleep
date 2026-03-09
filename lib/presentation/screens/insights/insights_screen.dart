@@ -97,7 +97,33 @@ class InsightsScreen extends ConsumerWidget {
 
   Widget _buildActualVsIdealTimeCard(SleepAnalyticsResult analytics, WeeklySummary summary, List<DailyLog> logs) {
     // 最新のログから実時間を取得
-    if (logs.isEmpty) return const SizedBox.shrink();
+    if (logs.isEmpty) {
+      return Container(
+        margin: const EdgeInsets.all(8.0).copyWith(bottom: 16),
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: AppColors.cardBackground,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: AppColors.primary.withOpacity(0.2)),
+        ),
+        child: const Column(
+          children: [
+            Icon(Icons.history, color: AppColors.accent, size: 32),
+            SizedBox(height: 12),
+            Text(
+              '睡眠データを収集中です',
+              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'まずは今日の睡眠を記録してみましょう。\nデータがたまると、あなたの理想との比較が表示されます。',
+              style: TextStyle(fontSize: 12, color: Colors.white70),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      );
+    }
 
     final latestLog = logs.first;
     final actualBedTime = latestLog.bedTime;
@@ -155,7 +181,7 @@ class InsightsScreen extends ConsumerWidget {
             // 疲労度・提案
             if (fatigueLevel != null) ...[
               const SizedBox(height: 20),
-              _buildFatigueStatus(fatigueLevel!),
+              _buildFatigueStatus(fatigueLevel),
             ],
             if (suggestEarlySleep) ...[
               const SizedBox(height: 16),

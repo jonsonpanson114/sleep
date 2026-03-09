@@ -32,9 +32,6 @@ class _MorningRoutineScreenState extends ConsumerState<MorningRoutineScreen> {
             error: (err, st) => Center(child: Text('ログエラー: $err')),
             data: (log) {
               final completedTaskIds = log?.completedTaskIds ?? [];
-              final allCompleted = tasks.isNotEmpty &&
-                  tasks.every((t) => completedTaskIds.contains(t.id));
-
               return Column(
                 children: [
                   _buildSleepTimeSection(context, log),
@@ -72,7 +69,7 @@ class _MorningRoutineScreenState extends ConsumerState<MorningRoutineScreen> {
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
-                            onPressed: allCompleted && !(log?.morningCompleted ?? false)
+                            onPressed: !(log?.morningCompleted ?? false)
                                 ? () => _showCompletionDialog(context, log!)
                                 : null,
                             style: ElevatedButton.styleFrom(

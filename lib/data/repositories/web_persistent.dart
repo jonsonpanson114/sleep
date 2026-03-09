@@ -148,32 +148,37 @@ class WebLogPersistent implements LogRepository {
     
     final logs = <DailyLog>[];
     for (final key in keys) {
-      final jsonStr = prefs.getString(key);
-      if (jsonStr != null) {
-        final map = jsonDecode(jsonStr) as Map<String, dynamic>;
-        logs.add(DailyLog(
-          date: DateTime.parse(map['date']),
-          completedTaskIds: (map['completedTaskIds'] as List?)?.map((e) => e.toString()).toList() ?? const [],
-          eveningCompleted: map['eveningCompleted'] ?? false,
-          morningCompleted: map['morningCompleted'] ?? false,
-          eveningCompletedAt: map['eveningCompletedAt'] != null ? DateTime.parse(map['eveningCompletedAt']) : null,
-          morningCompletedAt: map['morningCompletedAt'] != null ? DateTime.parse(map['morningCompletedAt']) : null,
-          napTaken: map['napTaken'],
-          daytimeSleepiness: map['daytimeSleepiness'],
-          feltIrritable: map['feltIrritable'],
-          dreamNote: map['dreamNote'],
-          bedTime: map['bedTime'] != null ? DateTime.parse(map['bedTime']) : null,
-          wakeTime: map['wakeTime'] != null ? DateTime.parse(map['wakeTime']) : null,
-          sleepDurationMinutes: map['sleepDurationMinutes'],
-          eveningTaskSnapshot: map['eveningTaskSnapshot'],
-          morningTaskSnapshot: map['morningTaskSnapshot'],
-          idealBedTime: map['idealBedTimeHour'] != null && map['idealBedTimeMinute'] != null
-              ? TimeOfDay(hour: map['idealBedTimeHour'], minute: map['idealBedTimeMinute'])
-              : null,
-          idealWakeTime: map['idealWakeTimeHour'] != null && map['idealWakeTimeMinute'] != null
-              ? TimeOfDay(hour: map['idealWakeTimeHour'], minute: map['idealWakeTimeMinute'])
-              : null,
-        ));
+      try {
+        final jsonStr = prefs.getString(key);
+        if (jsonStr != null) {
+          final map = jsonDecode(jsonStr) as Map<String, dynamic>;
+          logs.add(DailyLog(
+            date: DateTime.parse(map['date']),
+            completedTaskIds: (map['completedTaskIds'] as List?)?.map((e) => e.toString()).toList() ?? const [],
+            eveningCompleted: map['eveningCompleted'] ?? false,
+            morningCompleted: map['morningCompleted'] ?? false,
+            eveningCompletedAt: map['eveningCompletedAt'] != null ? DateTime.parse(map['eveningCompletedAt']) : null,
+            morningCompletedAt: map['morningCompletedAt'] != null ? DateTime.parse(map['morningCompletedAt']) : null,
+            napTaken: map['napTaken'],
+            daytimeSleepiness: map['daytimeSleepiness'],
+            feltIrritable: map['feltIrritable'],
+            dreamNote: map['dreamNote'],
+            bedTime: map['bedTime'] != null ? DateTime.parse(map['bedTime']) : null,
+            wakeTime: map['wakeTime'] != null ? DateTime.parse(map['wakeTime']) : null,
+            sleepDurationMinutes: map['sleepDurationMinutes'],
+            eveningTaskSnapshot: map['eveningTaskSnapshot'],
+            morningTaskSnapshot: map['morningTaskSnapshot'],
+            idealBedTime: map['idealBedTimeHour'] != null && map['idealBedTimeMinute'] != null
+                ? TimeOfDay(hour: map['idealBedTimeHour'], minute: map['idealBedTimeMinute'])
+                : null,
+            idealWakeTime: map['idealWakeTimeHour'] != null && map['idealWakeTimeMinute'] != null
+                ? TimeOfDay(hour: map['idealWakeTimeHour'], minute: map['idealWakeTimeMinute'])
+                : null,
+          ));
+        }
+      } catch (e) {
+        print('Error parsing log at $key: $e');
+        // skip corrupted logs
       }
     }
     
