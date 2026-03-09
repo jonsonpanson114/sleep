@@ -5,6 +5,7 @@ import '../../../domain/entities/routine_task.dart';
 import '../../providers/routine_provider.dart';
 import '../../../core/constants.dart';
 import '../../widgets/completion_ring.dart';
+import 'package:go_router/go_router.dart';
 
 class MorningRoutineScreen extends ConsumerStatefulWidget {
   const MorningRoutineScreen({super.key});
@@ -22,6 +23,12 @@ class _MorningRoutineScreenState extends ConsumerState<MorningRoutineScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('朝ルーティン'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.edit),
+            onPressed: () => context.push('/routine/morning/edit'),
+          ),
+        ],
       ),
       body: tasksAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),

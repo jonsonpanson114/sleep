@@ -87,8 +87,8 @@ class CalculateCorrelation {
   }
 
   bool _isEarlyBedtime(DailyLog log) {
-    return log.eveningCompletedAt != null &&
-        log.eveningCompletedAt!.hour < 22 ||
+    if (log.eveningCompletedAt == null) return false;
+    return log.eveningCompletedAt!.hour < 22 ||
         (log.eveningCompletedAt!.hour == 22 &&
             log.eveningCompletedAt!.minute <= 30);
   }
