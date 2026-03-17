@@ -24,7 +24,7 @@ class BadgeTile extends StatelessWidget {
           children: [
             Text(
               achievement.emoji,
-              style: TextStyle(fontSize: 48),
+              style: const TextStyle(fontSize: 48),
             ),
             const SizedBox(height: 8),
             Text(
@@ -52,10 +52,10 @@ class BadgeTile extends StatelessWidget {
                 margin: const EdgeInsets.only(top: 8),
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                 decoration: BoxDecoration(
-                  color: AppColors.badgeUnlocked.withOpacity(0.2),
+                  color: AppColors.badgeUnlocked.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Text(
+                child: const Text(
                   '達成！',
                   style: const TextStyle(
                     color: Colors.black,

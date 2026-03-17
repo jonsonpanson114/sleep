@@ -64,18 +64,18 @@ class InsightsScreen extends ConsumerWidget {
                 const Center(
                   child: Column(
                     children: [
-                      const SizedBox(height: 16),
-                      const Icon(Icons.bar_chart, size: 48, color: AppColors.textSecondary),
-                      const SizedBox(height: 12),
-                      const Text(
+                      SizedBox(height: 16),
+                      Icon(Icons.bar_chart, size: 48, color: AppColors.textSecondary),
+                      SizedBox(height: 12),
+                      Text(
                         '相関データ収集中',
                         style: TextStyle(
                           color: AppColors.textSecondary,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(height: 6),
-                      const Text(
+                      SizedBox(height: 6),
+                      Text(
                         '日中のコンディションを記録すると\n睡眠との相関が見えてきます',
                         style: TextStyle(
                           fontSize: 13,
@@ -179,7 +179,7 @@ class InsightsScreen extends ConsumerWidget {
               _buildAnalysisMessage(actualWakeTime, idealWakeTime, '起床'),
             ],
             // 疲労度・提案
-            if (fatigueLevel != null) ...[
+            if (true) ...[
               const SizedBox(height: 20),
               _buildFatigueStatus(fatigueLevel),
             ],

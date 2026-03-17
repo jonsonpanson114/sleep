@@ -36,7 +36,7 @@ class SaitoDailyCard extends ConsumerWidget {
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
-                      color: AppColors.accent.withOpacity(0.8),
+                      color: AppColors.accent.withValues(alpha: 0.8),
                     ),
                   ),
                   Text(

@@ -110,7 +110,7 @@ class WeeklyPatternChart extends StatelessWidget {
                     show: true,
                     drawVerticalLine: false,
                     getDrawingHorizontalLine: (value) => FlLine(
-                      color: AppColors.textSecondary.withOpacity(0.1),
+                      color: AppColors.textSecondary.withValues(alpha: 0.1),
                       strokeWidth: 1,
                     ),
                   ),

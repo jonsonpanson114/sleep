@@ -52,7 +52,7 @@ class _ConditionToggleState extends State<ConditionToggle> {
             style: TextStyle(
               color: hasValue
                   ? AppColors.textPrimary
-                  : AppColors.textSecondary.withOpacity(0.5),
+                  : AppColors.textSecondary.withValues(alpha: 0.5),
               ),
           ),
           Row(

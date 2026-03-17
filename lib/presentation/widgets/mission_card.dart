@@ -16,14 +16,14 @@ class MissionCard extends StatelessWidget {
       duration: const Duration(milliseconds: 300),
       child: Card(
         color: mission.isCompleted
-            ? AppColors.success.withOpacity(0.1)
+            ? AppColors.success.withValues(alpha: 0.1)
             : AppColors.cardBackground,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
           side: BorderSide(
             color: mission.isCompleted
-                ? AppColors.success.withOpacity(0.4)
-                : difficultyColor.withOpacity(0.2),
+                ? AppColors.success.withValues(alpha: 0.4)
+                : difficultyColor.withValues(alpha: 0.2),
             width: 1.5,
           ),
         ),

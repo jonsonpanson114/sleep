@@ -141,7 +141,7 @@ class _StampCalendarState extends State<StampCalendar> {
           color: bgColor,
           borderRadius: BorderRadius.circular(8),
           border: isToday
-              ? Border.all(color: AppColors.accent.withOpacity(0.5))
+              ? Border.all(color: AppColors.accent.withValues(alpha: 0.5))
               : null,
         ),
         child: Column(

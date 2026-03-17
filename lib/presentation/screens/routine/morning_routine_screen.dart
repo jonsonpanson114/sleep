@@ -108,9 +108,9 @@ class _MorningRoutineScreenState extends ConsumerState<MorningRoutineScreen> {
       margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.primary.withOpacity(0.1),
+        color: AppColors.primary.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.primary.withOpacity(0.2)),
+        border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -192,6 +192,13 @@ class _MorningRoutineScreenState extends ConsumerState<MorningRoutineScreen> {
     if (confirmed == true) {
       await ref.read(routineProvider.notifier).completeMorningRoutine(log);
     }
+  }
+
+  String _formatDuration(int? minutes) {
+    if (minutes == null || minutes < 0) return '0時間';
+    final h = minutes ~/ 60;
+    final m = minutes % 60;
+    return '$h時間${m > 0 ? ' $m分' : ''}';
   }
 }
 
@@ -369,7 +376,7 @@ class _SleepTimeDialogState extends State<_SleepTimeDialog> {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: AppColors.accent.withOpacity(0.1),
+                color: AppColors.accent.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
@@ -404,12 +411,5 @@ class _SleepTimeDialogState extends State<_SleepTimeDialog> {
     final hours = diff.inHours;
     final minutes = diff.inMinutes % 60;
     return '$hours時間${minutes > 0 ? ' $minutes分' : ''}';
-  }
-
-  String _formatDuration(int? minutes) {
-    if (minutes == null || minutes < 0) return '0時間';
-    final h = minutes ~/ 60;
-    final m = minutes % 60;
-    return '$h時間${m > 0 ? ' $m分' : ''}';
   }
 }

@@ -13,7 +13,7 @@ class WeeklySummaryCard extends StatelessWidget {
       color: AppColors.accent.withOpacity(0.1),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        side: BorderSide(color: AppColors.accent.withOpacity(0.3)),
+        side: BorderSide(color: AppColors.accent.withValues(alpha: 0.3)),
       ),
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -29,7 +29,7 @@ class WeeklySummaryCard extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.accent.withOpacity(0.8),
+                    color: AppColors.accent.withValues(alpha: 0.8),
                   ),
                 ),
                 const Spacer(),

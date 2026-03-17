@@ -23,7 +23,7 @@ class InsightCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: iconColor.withOpacity(0.2),
+                color: iconColor.withValues(alpha: 0.2),
                 shape: BoxShape.circle,
               ),
               child: Icon(

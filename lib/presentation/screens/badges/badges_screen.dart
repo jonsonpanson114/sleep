@@ -23,7 +23,7 @@ class BadgesScreen extends ConsumerWidget {
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [
+                children: const [
                   const Icon(Icons.military_tech, size: 64, color: AppColors.textSecondary),
                   const SizedBox(height: 16),
                   const Text(

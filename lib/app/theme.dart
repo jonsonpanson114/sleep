@@ -10,7 +10,7 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
-      colorScheme: ColorScheme.dark(
+      colorScheme: const ColorScheme.dark(
         primary: AppColors.primary,
         secondary: AppColors.accent,
         surface: AppColors.cardBackground,
@@ -57,20 +57,16 @@ class AppTheme {
           ),
         ),
       ),
-      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
         backgroundColor: AppColors.background,
         selectedItemColor: AppColors.accent,
         unselectedItemColor: AppColors.textSecondary,
-        selectedLabelStyle: GoogleFonts.notoSansJp(
-          textStyle: const TextStyle(
-            color: AppColors.accent,
-            fontWeight: FontWeight.w600,
-          ),
+        selectedLabelStyle: TextStyle(
+          color: AppColors.accent,
+          fontWeight: FontWeight.w600,
         ),
-        unselectedLabelStyle: GoogleFonts.notoSansJp(
-          textStyle: const TextStyle(
-            color: AppColors.textSecondary,
-          ),
+        unselectedLabelStyle: TextStyle(
+          color: AppColors.textSecondary,
         ),
         elevation: 0,
       ),

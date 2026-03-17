@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/settings_provider.dart';
 import '../../widgets/time_picker_tile.dart';
 import '../../../core/constants.dart';
+import '../../../data/services/notification_service.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -60,6 +61,27 @@ class SettingsScreen extends ConsumerWidget {
                 onChanged: (value) =>
                     ref.read(settingsProvider.notifier).toggleWakeNotification(value),
               ),
+              const SizedBox(height: 12),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: OutlinedButton.icon(
+                onPressed: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('テスト信号を送信したぜ。スマホを確認しろよ。'),
+                      duration: Duration(seconds: 2),
+                    ),
+                  );
+                  NotificationService.testNotification();
+                },
+                icon: const Icon(Icons.vibration),
+                label: const Text('通知テスト（バイブを確認しろよ）'),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: AppColors.accent,
+                    side: const BorderSide(color: AppColors.accent),
+                  ),
+                ),
+              ),
               const SizedBox(height: 32),
               const Text(
                 'リマインダー時間',
@@ -84,6 +106,13 @@ class SettingsScreen extends ConsumerWidget {
                 onSelectionChanged: (Set<int> values) {
                   ref.read(settingsProvider.notifier).updateReminderOffset(values.first);
                 },
+              ),
+              const SizedBox(height: 48),
+              Center(
+                child: Text(
+                  'Build: 2026-03-17 23:25 (Ultimate Fix)',
+                  style: const TextStyle(fontSize: 10, color: AppColors.textSecondary),
+                ),
               ),
             ],
           );

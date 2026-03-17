@@ -23,12 +23,12 @@ class SleepStatusBanner extends StatelessWidget {
           end: Alignment.bottomRight,
           colors: [
             AppColors.cardBackground,
-            AppColors.primary.withOpacity(0.5),
+            AppColors.primary.withValues(alpha: 0.5),
           ],
         ),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: _scoreColor(score).withOpacity(0.3),
+          color: _scoreColor(score).withValues(alpha: 0.3),
           width: 1.5,
         ),
       ),

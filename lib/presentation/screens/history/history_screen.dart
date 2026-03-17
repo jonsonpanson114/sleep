@@ -167,13 +167,13 @@ class _MissionsTab extends ConsumerWidget {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    AppColors.accent.withOpacity(0.15),
-                    AppColors.primary.withOpacity(0.15),
+                    AppColors.accent.withValues(alpha: 0.15),
+                    AppColors.primary.withValues(alpha: 0.15),
                   ],
                 ),
                 borderRadius: BorderRadius.circular(16),
                 border:
-                    Border.all(color: AppColors.accent.withOpacity(0.3)),
+                    Border.all(color: AppColors.accent.withValues(alpha: 0.3)),
               ),
               child: Row(
                 children: [
