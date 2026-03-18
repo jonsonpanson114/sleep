@@ -110,7 +110,7 @@ class SettingsScreen extends ConsumerWidget {
               const SizedBox(height: 48),
               Center(
                 child: Text(
-                  'Build: 2026-03-17 23:25 (Ultimate Fix)',
+                  'Build: 2026-03-18 10:15 (Ultimate Fix v2)',
                   style: const TextStyle(fontSize: 10, color: AppColors.textSecondary),
                 ),
               ),

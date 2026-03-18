@@ -201,19 +201,33 @@ class NotificationService {
 
           // 2. Notification Audit
           try {
-            if (!('Notification' in window)) {
-              errorReport.push('Global Notification object not found');
+            if (typeof window !== 'undefined' && !('Notification' in window)) {
+              errorReport.push('Global Notification object not found (might be iOS)');
             } else {
               log('Current permission: ' + Notification.permission);
               
               var showTestNotification = function() {
                 try {
-                  new Notification('テスト通知完了！', { 
+                  var options = { 
                     body: 'この通知が見えてれば信号は届いてる。',
-                    icon: '/icons/Icon-192.png'
-                  });
+                    icon: '/icons/Icon-192.png',
+                    vibrate: [200, 100, 200],
+                    tag: 'test-notification'
+                  };
+                  if (navigator && navigator.serviceWorker && navigator.serviceWorker.controller) {
+                    log('Using ServiceWorkerRegistration...');
+                    navigator.serviceWorker.ready.then(function(reg) {
+                      reg.showNotification('テスト通知完了！', options).catch(function(e) {
+                        log('SW Error: ' + e);
+                        new Notification('テスト通知完了！', options);
+                      });
+                    });
+                  } else {
+                    log('Falling back to new Notification...');
+                    new Notification('テスト通知完了！', options);
+                  }
                 } catch (e) {
-                  errorReport.push('Notification Display Error: ' + e.message);
+                  errorReport.push('Notification Exception: ' + e.message);
                 }
               };
 
@@ -221,7 +235,6 @@ class NotificationService {
                 showTestNotification();
               } else if (Notification.permission !== 'denied') {
                 log('Requesting permission...');
-                // Support both Promise and Callback versions
                 try {
                   var promise = Notification.requestPermission(function(p) {
                     log('Callback permission: ' + p);
@@ -244,9 +257,9 @@ class NotificationService {
 
           if (errorReport.length > 0) {
             var msg = 'AUDIT FAILED:\\n' + errorReport.join('\\n');
-            console.error(msg);
-            alert(msg);
+            console.warn(msg);
           }
+          log('Build: 2026-03-18 22:45 (Final Brute Force Fix)');
           log('--- Ultimate Notification Audit End ---');
         })();
       """]);
