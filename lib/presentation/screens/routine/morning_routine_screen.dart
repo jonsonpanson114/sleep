@@ -103,6 +103,9 @@ class _MorningRoutineScreenState extends ConsumerState<MorningRoutineScreen> {
                           onChanged: (val) {
                             ref.read(routineProvider.notifier).toggleTask(task.id);
                           },
+                          controlAffinity: ListTileControlAffinity.leading,
+                          activeColor: AppColors.success,
+                          checkColor: Colors.white,
                         );
                       },
                     ),
