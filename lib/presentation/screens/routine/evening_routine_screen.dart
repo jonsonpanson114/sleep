@@ -59,6 +59,15 @@ class EveningRoutineScreen extends ConsumerWidget {
                           value: (log?.completedTaskIds ?? [])
                               .contains(task.id),
                           title: Text(task.title),
+                          subtitle: (task.startTime != null || task.endTime != null)
+                              ? Text(
+                                  '${task.startTime ?? '--:--'} - ${task.endTime ?? '--:--'}',
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.white70,
+                                  ),
+                                )
+                              : null,
                           onChanged: (_) => ref
                                   .read(routineProvider.notifier)
                                   .toggleTask(task.id),

@@ -227,6 +227,8 @@ class WebTaskPersistent implements TaskRepository {
         title: map['title'],
         type: RoutineType.values.firstWhere((e) => e.toString() == map['type']),
         sortOrder: map['sortOrder'],
+        startTime: map['startTime'],
+        endTime: map['endTime'],
       );
     }).toList();
   }
@@ -287,6 +289,17 @@ class WebTaskPersistent implements TaskRepository {
     emitAllTasks();
   }
 
+  @override
+  Future<void> updateTask(RoutineTask task) async {
+    final tasks = await getAllTasks();
+    final index = tasks.indexWhere((t) => t.id == task.id);
+    if (index != -1) {
+      tasks[index] = task;
+      await _saveAllTasks(tasks);
+      emitTasksByType(task.type);
+    }
+  }
+
   Future<void> _saveAllTasks(List<RoutineTask> tasks) async {
     final prefs = await SharedPreferences.getInstance();
     final jsonList = tasks.map((t) => {
@@ -294,6 +307,8 @@ class WebTaskPersistent implements TaskRepository {
       'title': t.title,
       'type': t.type.toString(),
       'sortOrder': t.sortOrder,
+      'startTime': t.startTime,
+      'endTime': t.endTime,
     }).toList();
     await prefs.setString('routine_tasks', jsonEncode(jsonList));
     _controller.add(tasks); // 監視者に通知

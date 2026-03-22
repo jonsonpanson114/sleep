@@ -25,7 +25,25 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? e]) : super(e ?? _openConnection());
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
+
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+        onCreate: (m) async {
+          await m.createAll();
+        },
+        onUpgrade: (m, from, to) async {
+          if (from < 2) {
+            await m.addColumn(tasksTable, tasksTable.startTime);
+            await m.addColumn(tasksTable, tasksTable.endTime);
+          }
+        },
+        beforeOpen: (details) async {
+          if (details.wasCreated) {
+            await seedDefaultData();
+          }
+        },
+      );
 
   /// 初回起動時にデフォルトデータをシード
   Future<void> seedDefaultData() async {

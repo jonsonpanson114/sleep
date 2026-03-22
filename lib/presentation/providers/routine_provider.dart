@@ -185,4 +185,9 @@ class RoutineNotifier extends StateNotifier<RoutineState> {
     await taskRepo.reorderTasks(tasks);
     await _loadTasks();
   }
+
+  Future<void> updateTask(RoutineTask task) async {
+    await taskRepo.updateTask(task);
+    await _loadTasks();
+  }
 }

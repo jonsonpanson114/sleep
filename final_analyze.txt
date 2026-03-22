@@ -1,0 +1,158 @@
+Analyzing sleep...                                              
+
+  error - Target of URI hasn't been generated: 'package:sleep_routine_app/data/database/app_database.g.dart' - lib\data\database\app_database.dart:10:6 - uri_has_not_been_generated
+warning - The getter doesn't override an inherited getter - lib\data\database\app_database.dart:28:11 - override_on_non_overriding_member
+warning - The getter doesn't override an inherited getter - lib\data\database\app_database.dart:31:25 - override_on_non_overriding_member
+  error - Undefined name 'tasksTable' - lib\data\database\app_database.dart:37:31 - undefined_identifier
+  error - Undefined name 'tasksTable' - lib\data\database\app_database.dart:37:43 - undefined_identifier
+  error - Undefined name 'tasksTable' - lib\data\database\app_database.dart:38:31 - undefined_identifier
+  error - Undefined name 'tasksTable' - lib\data\database\app_database.dart:38:43 - undefined_identifier
+  error - The method 'select' isn't defined for the type 'AppDatabase' - lib\data\database\app_database.dart:51:36 - undefined_method
+  error - Undefined name 'settingsTable' - lib\data\database\app_database.dart:51:43 - undefined_identifier
+  error - The method 'into' isn't defined for the type 'AppDatabase' - lib\data\database\app_database.dart:53:13 - undefined_method
+  error - Undefined name 'settingsTable' - lib\data\database\app_database.dart:53:18 - undefined_identifier
+  error - Undefined name 'SettingsTableCompanion' - lib\data\database\app_database.dart:53:40 - undefined_identifier
+  error - The method 'select' isn't defined for the type 'AppDatabase' - lib\data\database\app_database.dart:65:33 - undefined_method
+  error - Undefined name 'tasksTable' - lib\data\database\app_database.dart:65:40 - undefined_identifier
+  error - The method 'batch' isn't defined for the type 'AppDatabase' - lib\data\database\app_database.dart:67:13 - undefined_method
+  error - Undefined name 'tasksTable' - lib\data\database\app_database.dart:68:21 - undefined_identifier
+  error - Undefined name 'TasksTableCompanion' - lib\data\database\app_database.dart:69:11 - undefined_identifier
+  error - Undefined name 'TasksTableCompanion' - lib\data\database\app_database.dart:75:11 - undefined_identifier
+  error - Undefined name 'TasksTableCompanion' - lib\data\database\app_database.dart:81:11 - undefined_identifier
+  error - Undefined name 'TasksTableCompanion' - lib\data\database\app_database.dart:87:11 - undefined_identifier
+  error - Undefined name 'TasksTableCompanion' - lib\data\database\app_database.dart:93:11 - undefined_identifier
+  error - Undefined name 'TasksTableCompanion' - lib\data\database\app_database.dart:99:11 - undefined_identifier
+   info - 'package:drift/web.dart' is deprecated and shouldn't be used. This variant of web support has downsides compared to `package:drift/wasm.dart` and is in a deprecated bugfix-only mode. Please consider migrating to the new web APIS: https://drift.simonbinder.eu/web - lib\data\database\connection\web.dart:2:1 - deprecated_member_use
+  error - The method 'select' isn't defined for the type 'AppDatabase' - lib\data\repositories\achievement_repository_impl.dart:12:36 - undefined_method
+  error - The getter 'achievementsTable' isn't defined for the type 'AppDatabase' - lib\data\repositories\achievement_repository_impl.dart:12:46 - undefined_getter
+  error - The method 'select' isn't defined for the type 'AppDatabase' - lib\data\repositories\achievement_repository_impl.dart:18:32 - undefined_method
+  error - The getter 'achievementsTable' isn't defined for the type 'AppDatabase' - lib\data\repositories\achievement_repository_impl.dart:18:42 - undefined_getter
+  error - The method 'into' isn't defined for the type 'AppDatabase' - lib\data\repositories\achievement_repository_impl.dart:23:16 - undefined_method
+  error - The getter 'achievementsTable' isn't defined for the type 'AppDatabase' - lib\data\repositories\achievement_repository_impl.dart:23:24 - undefined_getter
+  error - Undefined name 'AchievementsTableCompanion' - lib\data\repositories\achievement_repository_impl.dart:24:13 - undefined_identifier
+  error - The method 'select' isn't defined for the type 'AppDatabase' - lib\data\repositories\achievement_repository_impl.dart:34:32 - undefined_method
+  error - The getter 'achievementsTable' isn't defined for the type 'AppDatabase' - lib\data\repositories\achievement_repository_impl.dart:34:42 - undefined_getter
+  error - The method 'select' isn't defined for the type 'AppDatabase' - lib\data\repositories\log_repository_impl.dart:16:27 - undefined_method
+  error - The getter 'logsTable' isn't defined for the type 'AppDatabase' - lib\data\repositories\log_repository_impl.dart:16:37 - undefined_getter
+  error - The method 'select' isn't defined for the type 'AppDatabase' - lib\data\repositories\log_repository_impl.dart:25:27 - undefined_method
+  error - The getter 'logsTable' isn't defined for the type 'AppDatabase' - lib\data\repositories\log_repository_impl.dart:25:37 - undefined_getter
+  error - The method 'into' isn't defined for the type 'AppDatabase' - lib\data\repositories\log_repository_impl.dart:36:16 - undefined_method
+  error - The getter 'logsTable' isn't defined for the type 'AppDatabase' - lib\data\repositories\log_repository_impl.dart:36:24 - undefined_getter
+  error - Undefined name 'LogsTableCompanion' - lib\data\repositories\log_repository_impl.dart:36:42 - undefined_identifier
+  error - The method 'update' isn't defined for the type 'AppDatabase' - lib\data\repositories\log_repository_impl.dart:54:17 - undefined_method
+  error - The getter 'logsTable' isn't defined for the type 'AppDatabase' - lib\data\repositories\log_repository_impl.dart:54:27 - undefined_getter
+  error - The method 'LogsTableCompanion' isn't defined for the type 'LogRepositoryImpl' - lib\data\repositories\log_repository_impl.dart:56:18 - undefined_method
+  error - The method 'select' isn't defined for the type 'AppDatabase' - lib\data\repositories\log_repository_impl.dart:77:28 - undefined_method
+  error - The getter 'logsTable' isn't defined for the type 'AppDatabase' - lib\data\repositories\log_repository_impl.dart:77:38 - undefined_getter
+  error - The method 'select' isn't defined for the type 'AppDatabase' - lib\data\repositories\log_repository_impl.dart:89:28 - undefined_method
+  error - The getter 'logsTable' isn't defined for the type 'AppDatabase' - lib\data\repositories\log_repository_impl.dart:89:38 - undefined_getter
+  error - The method 'select' isn't defined for the type 'AppDatabase' - lib\data\repositories\log_repository_impl.dart:100:16 - undefined_method
+  error - The getter 'logsTable' isn't defined for the type 'AppDatabase' - lib\data\repositories\log_repository_impl.dart:100:26 - undefined_getter
+  error - Undefined class 'Log' - lib\data\repositories\log_repository_impl.dart:106:22 - undefined_class
+  error - The method 'select' isn't defined for the type 'AppDatabase' - lib\data\repositories\settings_repository_impl.dart:14:31 - undefined_method
+  error - The getter 'settingsTable' isn't defined for the type 'AppDatabase' - lib\data\repositories\settings_repository_impl.dart:14:41 - undefined_getter
+  error - The method 'select' isn't defined for the type 'AppDatabase' - lib\data\repositories\settings_repository_impl.dart:28:31 - undefined_method
+  error - The getter 'settingsTable' isn't defined for the type 'AppDatabase' - lib\data\repositories\settings_repository_impl.dart:28:41 - undefined_getter
+  error - The method 'into' isn't defined for the type 'AppDatabase' - lib\data\repositories\settings_repository_impl.dart:31:16 - undefined_method
+  error - The getter 'settingsTable' isn't defined for the type 'AppDatabase' - lib\data\repositories\settings_repository_impl.dart:31:24 - undefined_getter
+  error - Undefined name 'SettingsTableCompanion' - lib\data\repositories\settings_repository_impl.dart:31:46 - undefined_identifier
+  error - The method 'update' isn't defined for the type 'AppDatabase' - lib\data\repositories\settings_repository_impl.dart:41:17 - undefined_method
+  error - The getter 'settingsTable' isn't defined for the type 'AppDatabase' - lib\data\repositories\settings_repository_impl.dart:41:27 - undefined_getter
+  error - The method 'SettingsTableCompanion' isn't defined for the type 'SettingsRepositoryImpl' - lib\data\repositories\settings_repository_impl.dart:43:18 - undefined_method
+  error - The method 'select' isn't defined for the type 'AppDatabase' - lib\data\repositories\task_repository_impl.dart:13:28 - undefined_method
+  error - The getter 'tasksTable' isn't defined for the type 'AppDatabase' - lib\data\repositories\task_repository_impl.dart:13:38 - undefined_getter
+  error - The method 'select' isn't defined for the type 'AppDatabase' - lib\data\repositories\task_repository_impl.dart:31:29 - undefined_method
+  error - The getter 'tasksTable' isn't defined for the type 'AppDatabase' - lib\data\repositories\task_repository_impl.dart:31:39 - undefined_getter
+  error - The method 'into' isn't defined for the type 'AppDatabase' - lib\data\repositories\task_repository_impl.dart:49:14 - undefined_method
+  error - The getter 'tasksTable' isn't defined for the type 'AppDatabase' - lib\data\repositories\task_repository_impl.dart:49:22 - undefined_getter
+  error - Undefined name 'TasksTableCompanion' - lib\data\repositories\task_repository_impl.dart:49:41 - undefined_identifier
+  error - The method 'delete' isn't defined for the type 'AppDatabase' - lib\data\repositories\task_repository_impl.dart:61:15 - undefined_method
+  error - The getter 'tasksTable' isn't defined for the type 'AppDatabase' - lib\data\repositories\task_repository_impl.dart:61:25 - undefined_getter
+  error - The method 'transaction' isn't defined for the type 'AppDatabase' - lib\data\repositories\task_repository_impl.dart:66:14 - undefined_method
+  error - The method 'update' isn't defined for the type 'AppDatabase' - lib\data\repositories\task_repository_impl.dart:68:19 - undefined_method
+  error - The getter 'tasksTable' isn't defined for the type 'AppDatabase' - lib\data\repositories\task_repository_impl.dart:68:29 - undefined_getter
+  error - The method 'TasksTableCompanion' isn't defined for the type 'TaskRepositoryImpl' - lib\data\repositories\task_repository_impl.dart:70:20 - undefined_method
+  error - The method 'update' isn't defined for the type 'AppDatabase' - lib\data\repositories\task_repository_impl.dart:77:15 - undefined_method
+  error - The getter 'tasksTable' isn't defined for the type 'AppDatabase' - lib\data\repositories\task_repository_impl.dart:77:25 - undefined_getter
+  error - The method 'TasksTableCompanion' isn't defined for the type 'TaskRepositoryImpl' - lib\data\repositories\task_repository_impl.dart:78:16 - undefined_method
+   info - Use 'const' with the constructor to improve performance - lib\data\repositories\web_mocks.dart:11:27 - prefer_const_constructors
+   info - Don't invoke 'print' in production code - lib\data\repositories\web_persistent.dart:180:9 - avoid_print
+   info - Unnecessary braces in a string interpolation - lib\data\services\ai_service.dart:236:25 - unnecessary_brace_in_string_interps
+   info - 'dart:js' is deprecated and shouldn't be used. Use dart:js_interop instead - lib\data\services\notification_service.dart:2:1 - deprecated_member_use
+   info - Don't use web-only libraries outside Flutter web plugins - lib\data\services\notification_service.dart:2:1 - avoid_web_libraries_in_flutter
+   info - Use 'const' for final variables initialized to a constant value - lib\presentation\providers\badges_provider.dart:12:3 - prefer_const_declarations
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\badges\badges_screen.dart:23:20 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\badges\badges_screen.dart:24:22 - prefer_const_constructors
+   info - Unnecessary 'const' keyword - lib\presentation\screens\badges\badges_screen.dart:27:19 - unnecessary_const
+   info - Unnecessary 'const' keyword - lib\presentation\screens\badges\badges_screen.dart:28:19 - unnecessary_const
+   info - Unnecessary 'const' keyword - lib\presentation\screens\badges\badges_screen.dart:29:19 - unnecessary_const
+   info - Unnecessary 'const' keyword - lib\presentation\screens\badges\badges_screen.dart:33:19 - unnecessary_const
+   info - Unnecessary 'const' keyword - lib\presentation\screens\badges\badges_screen.dart:34:19 - unnecessary_const
+   info - Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check - lib\presentation\screens\edit_routine\edit_routine_screen.dart:107:33 - use_build_context_synchronously
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\screens\insights\insights_screen.dart:107:55 - deprecated_member_use
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\insights\insights_screen.dart:288:11 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\insights\insights_screen.dart:350:14 - prefer_const_constructors
+   info - Use 'const' literals as arguments to constructors of '@immutable' classes - lib\presentation\screens\insights\insights_screen.dart:351:19 - prefer_const_literals_to_create_immutables
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\insights\insights_screen.dart:354:11 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\insights\insights_screen.dart:355:20 - prefer_const_constructors
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\screens\insights\insights_screen.dart:382:33 - deprecated_member_use
+warning - The value of the local variable 'now' isn't used - lib\presentation\screens\routine\morning_routine_screen.dart:264:21 - unused_local_variable
+warning - The value of the local variable 'now' isn't used - lib\presentation\screens\routine\morning_routine_screen.dart:309:21 - unused_local_variable
+warning - The value of the local variable 'now' isn't used - lib\presentation\screens\routine\morning_routine_screen.dart:347:21 - unused_local_variable
+warning - The value of the local variable 'now' isn't used - lib\presentation\screens\routine\morning_routine_screen.dart:369:21 - unused_local_variable
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\settings\settings_screen.dart:111:15 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\settings\settings_screen.dart:112:24 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:23:20 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:24:22 - prefer_const_constructors
+   info - Use 'const' literals as arguments to constructors of '@immutable' classes - lib\presentation\screens\weekly_report\weekly_report_screen.dart:26:27 - prefer_const_literals_to_create_immutables
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:80:13 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:82:22 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:89:26 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:106:19 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:108:28 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:126:13 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:128:22 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:133:22 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:140:13 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:142:22 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:147:22 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:166:13 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:168:22 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:175:21 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:177:30 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:181:30 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:187:21 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:189:30 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:196:21 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:198:30 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:202:30 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:208:21 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:210:30 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:230:13 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:232:22 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:295:13 - prefer_const_constructors
+   info - Use 'const' literals as arguments to constructors of '@immutable' classes - lib\presentation\screens\weekly_report\weekly_report_screen.dart:296:25 - prefer_const_literals_to_create_immutables
+   info - Use 'const' with the constructor to improve performance - lib\presentation\screens\weekly_report\weekly_report_screen.dart:314:22 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\widgets\badge_tile.dart:42:22 - prefer_const_constructors
+   info - Unnecessary 'const' keyword - lib\presentation\widgets\badge_tile.dart:60:26 - unnecessary_const
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\condition_toggle.dart:80:76 - deprecated_member_use
+   info - Use 'const' with the constructor to improve performance - lib\presentation\widgets\insight_card.dart:53:28 - prefer_const_constructors
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\mission_card.dart:79:48 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\mission_card.dart:81:67 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\mission_card.dart:104:67 - deprecated_member_use
+   info - Use 'const' with the constructor to improve performance - lib\presentation\widgets\progress_chart.dart:25:13 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\widgets\progress_chart.dart:27:22 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\widgets\progress_chart.dart:46:29 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\widgets\progress_chart.dart:47:31 - prefer_const_constructors
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\saito_daily_card.dart:76:45 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\saito_daily_card.dart:78:64 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\stamp_calendar.dart:132:28 - deprecated_member_use
+   info - Use 'const' with the constructor to improve performance - lib\presentation\widgets\streak_badge.dart:14:9 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\widgets\streak_badge.dart:26:22 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\widgets\task_tile.dart:35:21 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\presentation\widgets\time_picker_tile.dart:54:20 - prefer_const_constructors
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\weekly_pattern_chart.dart:136:42 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\weekly_pattern_chart.dart:155:22 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\weekly_pattern_chart.dart:157:41 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\weekly_summary_card.dart:13:31 - deprecated_member_use
+

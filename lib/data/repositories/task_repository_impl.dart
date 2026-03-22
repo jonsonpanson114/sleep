@@ -19,6 +19,8 @@ class TaskRepositoryImpl implements TaskRepository {
                   ? RoutineType.evening
                   : RoutineType.morning,
               sortOrder: t.sortOrder,
+              startTime: t.startTime,
+              endTime: t.endTime,
             ))
         .toList();
   }
@@ -36,6 +38,8 @@ class TaskRepositoryImpl implements TaskRepository {
               title: t.title,
               type: type,
               sortOrder: t.sortOrder,
+              startTime: t.startTime,
+              endTime: t.endTime,
             ))
         .toList();
   }
@@ -47,6 +51,8 @@ class TaskRepositoryImpl implements TaskRepository {
           title: task.title,
           routineType: task.type == RoutineType.evening ? 'evening' : 'morning',
           sortOrder: task.sortOrder,
+          startTime: Value(task.startTime),
+          endTime: Value(task.endTime),
         ));
   }
 
@@ -64,5 +70,15 @@ class TaskRepositoryImpl implements TaskRepository {
             .write(TasksTableCompanion(sortOrder: Value(i)));
       }
     });
+  }
+
+  @override
+  Future<void> updateTask(RoutineTask task) async {
+    await (db.update(db.tasksTable)..where((t) => t.id.equals(task.id)))
+        .write(TasksTableCompanion(
+      title: Value(task.title),
+      startTime: Value(task.startTime),
+      endTime: Value(task.endTime),
+    ));
   }
 }

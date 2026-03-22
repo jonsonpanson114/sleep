@@ -53,6 +53,8 @@ class WebTaskMock implements TaskRepository {
   Future<void> deleteTask(String id) async {}
   @override
   Future<void> reorderTasks(List<RoutineTask> tasks) async {}
+  @override
+  Future<void> updateTask(RoutineTask task) async {}
 }
 
 class WebAchievementMock implements AchievementRepository {

@@ -51,11 +51,18 @@ class _MorningRoutineScreenState extends ConsumerState<MorningRoutineScreen> {
                         final isCompleted = completedTaskIds.contains(task.id);
                         return CheckboxListTile(
                           title: Text(task.title),
+                          subtitle: (task.startTime != null || task.endTime != null)
+                              ? Text(
+                                  '${task.startTime ?? '--:--'} - ${task.endTime ?? '--:--'}',
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: AppColors.textSecondary,
+                                  ),
+                                )
+                              : null,
                           value: isCompleted,
                           onChanged: (val) {
-                            ref
-                                .read(routineProvider.notifier)
-                                .toggleTask(task.id);
+                            ref.read(routineProvider.notifier).toggleTask(task.id);
                           },
                         );
                       },
@@ -254,7 +261,6 @@ class _SleepTimeDialogState extends State<_SleepTimeDialog> {
             ),
             trailing: const Icon(Icons.arrow_forward_ios, size: 16),
             onTap: () async {
-              final now = DateTime.now();
               final picked = await showTimePicker(
                 context: context,
                 initialTime: bedTime != null
@@ -337,7 +343,6 @@ class _SleepTimeDialogState extends State<_SleepTimeDialog> {
             ),
             trailing: const Icon(Icons.arrow_forward_ios, size: 16),
             onTap: () async {
-              final now = DateTime.now();
               final picked = await showTimePicker(
                 context: context,
                 initialTime: const TimeOfDay(hour: 22, minute: 30),
@@ -359,7 +364,6 @@ class _SleepTimeDialogState extends State<_SleepTimeDialog> {
             ),
             trailing: const Icon(Icons.arrow_forward_ios, size: 16),
             onTap: () async {
-              final now = DateTime.now();
               final picked = await showTimePicker(
                 context: context,
                 initialTime: const TimeOfDay(hour: 6, minute: 30),

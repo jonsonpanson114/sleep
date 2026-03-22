@@ -6,4 +6,5 @@ abstract interface class TaskRepository {
   Future<void> addTask(RoutineTask task);
   Future<void> deleteTask(String id);
   Future<void> reorderTasks(List<RoutineTask> tasks);
+  Future<void> updateTask(RoutineTask task);
 }
