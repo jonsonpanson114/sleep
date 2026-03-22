@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'data/repositories/settings_repository_impl.dart';
-import 'data/repositories/task_repository_impl.dart';
-import 'data/repositories/log_repository_impl.dart';
-import 'data/repositories/achievement_repository_impl.dart';
+// import 'data/repositories/settings_repository_impl.dart';
+// import 'data/repositories/task_repository_impl.dart';
+// import 'data/repositories/log_repository_impl.dart';
+// import 'data/repositories/achievement_repository_impl.dart';
+import 'data/repositories/web_mocks.dart';
 import 'domain/repositories/settings_repository.dart';
 import 'domain/repositories/task_repository.dart';
 import 'domain/repositories/log_repository.dart';
@@ -12,7 +13,7 @@ import 'data/services/notification_service.dart';
 import 'presentation/providers/repository_providers.dart';
 import 'app/theme.dart';
 import 'app/router.dart';
-import 'data/database/app_database.dart';
+// import 'data/database/app_database.dart';
 import 'data/repositories/web_persistent.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:google_fonts/google_fonts.dart';
@@ -32,16 +33,11 @@ void main() async {
     logRepo = WebLogPersistent();
     achievementRepo = WebAchievementPersistent();
   } else {
-    final db = AppDatabase();
-    try {
-      await db.seedDefaultData().timeout(const Duration(seconds: 5));
-    } catch (e) {
-      debugPrint('Database seeding failed or timed out: $e');
-    }
-    settingsRepo = SettingsRepositoryImpl(db);
-    taskRepo = TaskRepositoryImpl(db);
-    logRepo = LogRepositoryImpl(db);
-    achievementRepo = AchievementRepositoryImpl(db);
+    // NOTE: Driftのコード生成エラー回避のため、Native環境でも一時的にMockを使用
+    settingsRepo = WebSettingsMock();
+    taskRepo = WebTaskMock();
+    logRepo = WebLogMock();
+    achievementRepo = WebAchievementMock();
   }
 
   runApp(
