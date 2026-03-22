@@ -49,6 +49,34 @@ class _MorningRoutineScreenState extends ConsumerState<MorningRoutineScreen> {
                       itemBuilder: (context, index) {
                         final task = tasks[index];
                         final isCompleted = completedTaskIds.contains(task.id);
+
+                        Future<void> onTimeTap() async {
+                          TimeOfDay? parseTime(String? s) {
+                            if (s == null || !s.contains(':')) return null;
+                            final parts = s.split(':');
+                            return TimeOfDay(hour: int.parse(parts[0]), minute: int.parse(parts[1]));
+                          }
+                          String fmt(TimeOfDay t) =>
+                              '${t.hour.toString().padLeft(2, '0')}:${t.minute.toString().padLeft(2, '0')}';
+
+                          final start = await showTimePicker(
+                            context: context,
+                            initialTime: parseTime(task.startTime) ?? TimeOfDay.now(),
+                            helpText: '開始時間',
+                          );
+                          if (start == null) return;
+                          if (!context.mounted) return;
+                          final end = await showTimePicker(
+                            context: context,
+                            initialTime: parseTime(task.endTime) ?? start,
+                            helpText: '終了時間',
+                          );
+                          if (end == null) return;
+                          ref.read(routineProvider.notifier).updateTask(
+                                task.copyWith(startTime: fmt(start), endTime: fmt(end)),
+                              );
+                        }
+
                         return CheckboxListTile(
                           title: Text(task.title),
                           subtitle: (task.startTime != null || task.endTime != null)
@@ -60,6 +88,17 @@ class _MorningRoutineScreenState extends ConsumerState<MorningRoutineScreen> {
                                   ),
                                 )
                               : null,
+                          secondary: IconButton(
+                            icon: Icon(
+                              Icons.access_time,
+                              size: 20,
+                              color: (task.startTime != null)
+                                  ? AppColors.primary
+                                  : AppColors.textSecondary,
+                            ),
+                            tooltip: '時間を設定',
+                            onPressed: onTimeTap,
+                          ),
                           value: isCompleted,
                           onChanged: (val) {
                             ref.read(routineProvider.notifier).toggleTask(task.id);

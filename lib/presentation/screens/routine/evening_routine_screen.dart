@@ -7,11 +7,43 @@ import '../../widgets/night_sky_background.dart';
 import '../../widgets/completion_ring.dart';
 import '../../../core/constants.dart';
 
-class EveningRoutineScreen extends ConsumerWidget {
+class EveningRoutineScreen extends ConsumerStatefulWidget {
   const EveningRoutineScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<EveningRoutineScreen> createState() => _EveningRoutineScreenState();
+}
+
+class _EveningRoutineScreenState extends ConsumerState<EveningRoutineScreen> {
+  Future<void> _onTimeTap(BuildContext context, RoutineTask task) async {
+    TimeOfDay? parseTime(String? s) {
+      if (s == null || !s.contains(':')) return null;
+      final parts = s.split(':');
+      return TimeOfDay(hour: int.parse(parts[0]), minute: int.parse(parts[1]));
+    }
+    String fmt(TimeOfDay t) =>
+        '${t.hour.toString().padLeft(2, '0')}:${t.minute.toString().padLeft(2, '0')}';
+
+    final start = await showTimePicker(
+      context: context,
+      initialTime: parseTime(task.startTime) ?? TimeOfDay.now(),
+      helpText: '開始時間',
+    );
+    if (start == null) return;
+    if (!mounted) return;
+    final end = await showTimePicker(
+      context: context,
+      initialTime: parseTime(task.endTime) ?? start,
+      helpText: '終了時間',
+    );
+    if (end == null) return;
+    ref.read(routineProvider.notifier).updateTask(
+          task.copyWith(startTime: fmt(start), endTime: fmt(end)),
+        );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final routineAsync = ref.watch(routineTasksProvider(RoutineType.evening));
     final todayLogAsync = ref.watch(todayLogProvider);
 
@@ -68,6 +100,17 @@ class EveningRoutineScreen extends ConsumerWidget {
                                   ),
                                 )
                               : null,
+                          secondary: IconButton(
+                            icon: Icon(
+                              Icons.access_time,
+                              size: 20,
+                              color: (task.startTime != null)
+                                  ? AppColors.primary
+                                  : Colors.white54,
+                            ),
+                            tooltip: '時間を設定',
+                            onPressed: () => _onTimeTap(context, task),
+                          ),
                           onChanged: (_) => ref
                                   .read(routineProvider.notifier)
                                   .toggleTask(task.id),
