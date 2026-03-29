@@ -1,10 +1,12 @@
 import 'dart:typed_data';
-import 'dart:js' as js; // Web版でバイブを叩くため
+import 'dart:js' as js;
+import 'dart:convert';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart' show TimeOfDay;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz_data;
+import 'package:http/http.dart' as http;
 import '../../domain/entities/app_settings.dart';
 import '../../core/constants.dart';
 
@@ -13,16 +15,26 @@ class NotificationService {
       FlutterLocalNotificationsPlugin();
 
   static bool _initialized = false;
+  static const String _vapidPublicKey = 'BP9qUkCWWuVTJDNZWknPNWsITyccSF_2Zl_VHdqz8vujtH8he7AFZKGeAU9PBl7TWj3J-Rvvdpfw_E5Sq4UqXOk'; // 生成済みの特製VAPID
 
   /// 初期化・権限リクエスト
   static Future<void> init() async {
-    // Web(PWA含む)の場合は標準の通知許可リクエストのみ試行
+    if (_initialized) return;
+
     if (kIsWeb) {
-      // PWAでの通知は将来的な拡張のために構造だけ残す
+      // Webの場合、ブラウザに通知許可を求める
+      try {
+        js.context.callMethod('eval', ["""
+          if ('Notification' in window && Notification.permission !== 'granted' && Notification.permission !== 'denied') {
+            Notification.requestPermission();
+          }
+        """]);
+      } catch (e) {
+        debugPrint('Web Push permission init error: $e');
+      }
+      _initialized = true;
       return;
     }
-    
-    if (_initialized) return;
 
     const androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
     const iosInit = DarwinInitializationSettings(
@@ -36,11 +48,9 @@ class NotificationService {
     );
 
     tz_data.initializeTimeZones();
-    // 東京固定をやめて、ローカルを取得
     final String timeZoneName = tz.local.name;
     tz.setLocalLocation(tz.getLocation(timeZoneName));
 
-    // Android 13+ で通知権限をリクエスト
     await _plugin
         .resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin>()
@@ -49,7 +59,7 @@ class NotificationService {
     _initialized = true;
   }
 
-  /// 就寝リマインダーをスケジュール
+  /// 就寝リマインダーをスケジュール（ネイティブ専用）
   static Future<void> scheduleBedtimeReminder(
     TimeOfDay time,
     int offsetMinutes,
@@ -66,16 +76,13 @@ class NotificationService {
       time.minute,
     ).subtract(Duration(minutes: offsetMinutes));
 
-    // すで過ぎていれば明日にスケジュール
     var scheduledTime = reminderTime;
     if (scheduledTime.isBefore(now)) {
       scheduledTime = scheduledTime.add(const Duration(days: 1));
     }
 
     final tzScheduledTime = tz.TZDateTime.from(scheduledTime, tz.local);
-
-    // バイブレーションパターンの設定（就寝前：控えめ）
-    final Int64List vibrationPattern = Int64List.fromList([0, 500]); // 0.5秒だけ震える
+    final Int64List vibrationPattern = Int64List.fromList([0, 500]);
 
     await _plugin.zonedSchedule(
       NotificationIds.bedtimeReminder,
@@ -100,7 +107,7 @@ class NotificationService {
     );
   }
 
-  /// 起床アラームをスケジュール
+  /// 起床アラームをスケジュール（ネイティブ専用）
   static Future<void> scheduleWakeAlarm(TimeOfDay time) async {
     if (kIsWeb) return;
     if (!_initialized) await init();
@@ -108,15 +115,12 @@ class NotificationService {
     final now = DateTime.now();
     var alarmTime = DateTime(now.year, now.month, now.day, time.hour, time.minute);
 
-    // すで過ぎていれば明日にスケジュール
     if (alarmTime.isBefore(now)) {
       alarmTime = alarmTime.add(const Duration(days: 1));
     }
 
     final tzAlarmTime = tz.TZDateTime.from(alarmTime, tz.local);
-
-    // バイブレーションパターンの設定（起床：しっかり）
-    final Int64List vibrationPattern = Int64List.fromList([0, 1000, 500, 1000, 500, 1000]); // 震える・休む・震える
+    final Int64List vibrationPattern = Int64List.fromList([0, 1000, 500, 1000, 500, 1000]); 
 
     await _plugin.zonedSchedule(
       NotificationIds.wakeAlarm,
@@ -141,27 +145,49 @@ class NotificationService {
     );
   }
 
-  /// 就寝リマインダーをキャンセル
   static Future<void> cancelBedtimeReminder() async {
+    if (kIsWeb) return;
     await _plugin.cancel(NotificationIds.bedtimeReminder);
   }
 
-  /// 起床アラームをキャンセル
   static Future<void> cancelWakeAlarm() async {
+    if (kIsWeb) return;
     await _plugin.cancel(NotificationIds.wakeAlarm);
   }
 
-  /// 全通知をキャンセル
   static Future<void> cancelAll() async {
     if (kIsWeb) return;
     await _plugin.cancelAll();
   }
 
-  /// 設定に応じて全通知を再スケジュール
+  /// PWA向け 本気のWeb Push サーバー連携 (Vercel -> GASエコシステムへ登録)
+  static Future<void> _syncWebPushSettings(AppSettings settings) async {
+    try {
+      // index.htmlに仕掛けたsubscribeToPushを呼び出してTokenを取得
+      // 非同期関数の結果を受け取るには Promise から解決させる必要があるが、
+      // 簡易的にJS内で結果を変数に格納し、Dartから読む方法などを取るか、
+      // あるいは直接Dart APIを使用する(package:js)。今回は原始的なPromise待機を使用。
+      // wait for Promise:
+      final rawSub = await js.context.callMethod('subscribeToPush', [_vapidPublicKey]);
+      
+      // Returns a Promise<string | null> under the hood in Dart when using callMethod asynchronously? 
+      // Actually `callMethod` doesn't await Promise properly unless it's a Future from dart:js_util.
+      // 代替策: JS側で fetch する方が確実。
+      // ここでは、Dart側で直接fetchを叩かせるため、JSに `window.subscribeToPushInfo` を叩かせた後、
+      // 取得した文字列（JSON）をPOSTする形をとるか。
+      // ...が、簡略化のため、JS内で `/api/push-subscription` へfetchする関数を呼び出させよう。
+    } catch (e) {
+      debugPrint('Web Push sync error: $e');
+    }
+  }
+
+  /// 設定に応じて全通知を再スケジュール（またはサーバーへ同期）
   static Future<void> rescheduleAll(AppSettings settings) async {
-    // Web版(PWA)の場合はバックグラウンド通知が難しいため、
-    // ここではネイティブアプリ版のみ処理する
-    if (kIsWeb) return;
+    if (kIsWeb) {
+      // PWA(Web版): Vercel Serverless へ通知設定と購読情報を同期する
+      _syncToServerlessWebPush(settings);
+      return;
+    }
 
     await cancelAll();
 
@@ -177,90 +203,73 @@ class NotificationService {
     }
   }
 
+  /// JSから購読オブジェクトを拾い出して、DartのhttpでVercelへ投げる
+  static Future<void> _syncToServerlessWebPush(AppSettings settings) async {
+    try {
+      // Dart<=>JSの非同期処理の壁を越えるため、JS内で全部処理させてしまうのが最も安全で早い
+      final settingsJson = jsonEncode({
+        'bedtimeHour': settings.bedtime.hour,
+        'bedtimeMinute': settings.bedtime.minute,
+        'wakeHour': settings.wakeTime.hour,
+        'wakeMinute': settings.wakeTime.minute,
+        'bedtimeEnabled': settings.bedtimeNotificationEnabled,
+        'wakeEnabled': settings.wakeNotificationEnabled,
+        'offset': settings.bedtimeReminderOffsetMinutes,
+      });
+
+      js.context.callMethod('eval', ["""
+        (async function() {
+          try {
+            if (typeof window.subscribeToPush !== 'function') {
+              console.warn("subscribeToPush is missing");
+              return;
+            }
+            if (Notification.permission !== 'granted') {
+              const p = await Notification.requestPermission();
+              if (p !== 'granted') return;
+            }
+            const subStr = await window.subscribeToPush('$_vapidPublicKey');
+            if (subStr) {
+              const subJson = JSON.parse(subStr);
+              const settingsData = $settingsJson;
+              
+              const res = await fetch('/api/push-subscription', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  subscription: subJson,
+                  settings: settingsData
+                })
+              });
+              const resultText = await res.text();
+              console.log('Web Push Sync Result:', resultText);
+            }
+          } catch(e) {
+            console.error('Final sync block error:', e);
+          }
+        })();
+      """]);
+    } catch (e) {
+      debugPrint('Dart syncToServerlessWebPush error: $e');
+    }
+  }
+
   /// 即時テスト通知を送信
   static Future<void> testNotification() async {
-    // Web版(PWA)の場合はブラウザのAPIを使用
     if (kIsWeb) {
+      // PWA版：Vercelにテスト送信を促すか、とりあえずService Workerに直接表示させる
       js.context.callMethod('eval', ["""
-        (function() {
-          console.log('--- Ultimate Notification Audit Start ---');
-          var log = function(m) { console.log('[Audit] ' + m); };
-          var errorReport = [];
-
-          // 1. Vibrate Test
-          try {
-            if (navigator && navigator.vibrate) {
-              log('Attempting vibrate...');
-              navigator.vibrate([200, 100, 200]);
-            } else {
-              log('navigator.vibrate not supported');
-            }
-          } catch (e) {
-            errorReport.push('Vibrate Error: ' + e.message);
+        (async function() {
+          if (Notification.permission === 'granted' && navigator.serviceWorker) {
+            const reg = await navigator.serviceWorker.ready;
+            reg.showNotification('テスト通信成功！', {
+              body: 'VAPIDベースのServiceWorkerが待ち構えてるぜ',
+              icon: '/icons/Icon-192.png',
+              vibrate: [200, 100, 200]
+            });
+          } else if (Notification.permission !== 'denied') {
+            Notification.requestPermission();
           }
-
-          // 2. Notification Audit
-          try {
-            if (typeof window !== 'undefined' && !('Notification' in window)) {
-              errorReport.push('Global Notification object not found (might be iOS)');
-            } else {
-              log('Current permission: ' + Notification.permission);
-              
-              var showTestNotification = function() {
-                try {
-                  var options = { 
-                    body: 'この通知が見えてれば信号は届いてる。',
-                    icon: '/icons/Icon-192.png',
-                    vibrate: [200, 100, 200],
-                    tag: 'test-notification'
-                  };
-                  if (navigator && navigator.serviceWorker && navigator.serviceWorker.controller) {
-                    log('Using ServiceWorkerRegistration...');
-                    navigator.serviceWorker.ready.then(function(reg) {
-                      reg.showNotification('テスト通知完了！', options).catch(function(e) {
-                        log('SW Error: ' + e);
-                        new Notification('テスト通知完了！', options);
-                      });
-                    });
-                  } else {
-                    log('Falling back to new Notification...');
-                    new Notification('テスト通知完了！', options);
-                  }
-                } catch (e) {
-                  errorReport.push('Notification Exception: ' + e.message);
-                }
-              };
-
-              if (Notification.permission === 'granted') {
-                showTestNotification();
-              } else if (Notification.permission !== 'denied') {
-                log('Requesting permission...');
-                try {
-                  var promise = Notification.requestPermission(function(p) {
-                    log('Callback permission: ' + p);
-                    if (p === 'granted') showTestNotification();
-                  });
-                  if (promise && promise.then) {
-                    promise.then(function(p) {
-                      log('Promise permission: ' + p);
-                      if (p === 'granted') showTestNotification();
-                    });
-                  }
-                } catch (e) {
-                  errorReport.push('Permission Request Error: ' + e.message);
-                }
-              }
-            }
-          } catch (e) {
-            errorReport.push('General Notification Error: ' + e.message);
-          }
-
-          if (errorReport.length > 0) {
-            var msg = 'AUDIT FAILED:\\n' + errorReport.join('\\n');
-            console.warn(msg);
-          }
-          log('Build: 2026-03-18 22:45 (Final Brute Force Fix)');
-          log('--- Ultimate Notification Audit End ---');
         })();
       """]);
       return;

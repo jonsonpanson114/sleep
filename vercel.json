@@ -1,8 +1,13 @@
 {
     "version": 2,
     "public": true,
-    "framework": null,
+    "buildCommand": "flutter build web",
+    "outputDirectory": "build/web",
     "rewrites": [
+        {
+            "source": "/api/(.*)",
+            "destination": "/api/$1"
+        },
         {
             "source": "/(.*)",
             "destination": "/index.html"
