@@ -9,7 +9,7 @@ self.addEventListener('push', (event) => {
     const options = {
       body: body,
       icon: '/icons/notification_stylish.png',
-      badge: '/icons/notification_stylish.png',
+      badge: '/icons/badge-monochrome-72.png',
       vibrate: [300, 100, 300, 100, 300],
       requireInteraction: true,
       data: {
