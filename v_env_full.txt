@@ -1,0 +1,7 @@
+
+ name                       value               environments                        created    
+ GEMINI_API_KEY             Encrypted           Development, Preview, Production    1m ago     
+ VITE_GAS_URL               Encrypted           Development, Preview, Production    2m ago     
+ VAPID_PRIVATE_KEY          Encrypted           Production                          1d ago     
+ VAPID_PUBLIC_KEY           Encrypted           Production                          1d ago     
+

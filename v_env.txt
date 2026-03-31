@@ -1,0 +1,5 @@
+
+ name                       value               environments        created    
+ VAPID_PRIVATE_KEY          Encrypted           Production          1h ago     
+ VAPID_PUBLIC_KEY           Encrypted           Production          1h ago     
+

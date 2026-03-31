@@ -1,8 +1,8 @@
 import 'dart:typed_data';
 import 'dart:js' as js;
 import 'dart:convert';
-import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:flutter/material.dart' show TimeOfDay;
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz_data;
@@ -16,6 +16,16 @@ class NotificationService {
 
   static bool _initialized = false;
   static const String _vapidPublicKey = 'BP9qUkCWWuVTJDNZWknPNWsITyccSF_2Zl_VHdqz8vujtH8he7AFZKGeAU9PBl7TWj3J-Rvvdpfw_E5Sq4UqXOk'; // 生成済みの特製VAPID
+
+  /// 現在の通知許可状態を取得
+  static Future<String> getPermissionStatus() async {
+    if (!kIsWeb) return 'granted';
+    try {
+      return js.context.callMethod('eval', ['Notification.permission']) as String;
+    } catch (e) {
+      return 'unsupported';
+    }
+  }
 
   /// 初期化・権限リクエスト
   static Future<void> init() async {
@@ -254,21 +264,20 @@ class NotificationService {
     }
   }
 
-  /// 即時テスト通知を送信
+  /// テスト通知を送信
   static Future<void> testNotification() async {
     if (kIsWeb) {
-      // PWA版：Vercelにテスト送信を促すか、とりあえずService Workerに直接表示させる
       js.context.callMethod('eval', ["""
         (async function() {
           if (Notification.permission === 'granted' && navigator.serviceWorker) {
             const reg = await navigator.serviceWorker.ready;
-            reg.showNotification('テスト通信成功！', {
-              body: 'VAPIDベースのServiceWorkerが待ち構えてるぜ',
-              icon: '/icons/Icon-192.png',
+            reg.showNotification('テスト通知成功！', {
+              body: '新アイコンもいい感じだろ！バイブレーションも設定済みだ。',
+              icon: '/icons/notification_stylish.png',
               vibrate: [200, 100, 200]
             });
-          } else if (Notification.permission !== 'denied') {
-            Notification.requestPermission();
+          } else {
+            console.warn('通知許可がないか、Service Workerが準備できていません');
           }
         })();
       """]);

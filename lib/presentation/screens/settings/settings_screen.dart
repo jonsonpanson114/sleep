@@ -44,7 +44,39 @@ class SettingsScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 24),
               const Text(
-                '通知',
+                '通知状態',
+                style: TextStyle(fontSize: 14, color: AppColors.textSecondary),
+              ),
+              FutureBuilder<String>(
+                future: NotificationService.getPermissionStatus(),
+                builder: (context, snapshot) {
+                  final status = snapshot.data ?? '読み込み中...';
+                  Color statusColor = Colors.grey;
+                  if (status == 'granted') statusColor = AppColors.success;
+                  if (status == 'denied') statusColor = AppColors.danger;
+
+                  return ListTile(
+                    title: const Text('許可ステータス'),
+                    trailing: Text(
+                      status,
+                      style: TextStyle(color: statusColor, fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: status != 'granted'
+                        ? const Text('※通知を受け取るには許可が必要です')
+                        : null,
+                    onTap: status != 'granted'
+                        ? () async {
+                            await NotificationService.init();
+                            // 再読み込みのために画面を更新
+                            (context as Element).markNeedsBuild();
+                          }
+                        : null,
+                  );
+                },
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'リマインダー',
                 style: TextStyle(fontSize: 14, color: AppColors.textSecondary),
               ),
               SwitchListTile(

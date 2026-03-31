@@ -1,7 +1,8 @@
 {
     "version": 2,
     "public": true,
-    "buildCommand": "flutter build web",
+    "framework": null,
+    "buildCommand": "echo Skipping build",
     "outputDirectory": "build/web",
     "rewrites": [
         {

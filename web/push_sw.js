@@ -8,8 +8,8 @@ self.addEventListener('push', (event) => {
 
     const options = {
       body: body,
-      icon: '/icons/Icon-192.png',
-      badge: '/favicon.png',
+      icon: '/icons/notification_stylish.png',
+      badge: '/icons/notification_stylish.png',
       vibrate: [300, 100, 300, 100, 300],
       requireInteraction: true,
       data: {
