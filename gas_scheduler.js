@@ -40,8 +40,7 @@ function doPost(e) {
       const settings = data.settings;
       
       const sheet = getSheet();
-      const dataRange = sheet.getDataRange();
-      const values = dataRange.getValues();
+      const lastRow = sheet.getLastRow();
       
       const endpoint = sub.endpoint;
       const subJsonStr = JSON.stringify(sub);
@@ -58,18 +57,23 @@ function doPost(e) {
         new Date()
       ];
 
-      // 既存のエンドポイントがあれば更新、なければ追加
+      // 既存のエンドポイントがあるか第一列(Endpoint列)のみを検索して特定
       let foundIndex = -1;
-      for (let i = 1; i < values.length; i++) {
-        if (values[i][0] === endpoint) {
-          foundIndex = i + 1;
-          break;
+      if (lastRow >= 2) {
+        const endpoints = sheet.getRange(1, 1, lastRow, 1).getValues();
+        for (let i = 1; i < endpoints.length; i++) {
+          if (endpoints[i][0] === endpoint) {
+            foundIndex = i + 1;
+            break;
+          }
         }
       }
 
       if (foundIndex > 0) {
+        // 見つかった場合はその行だけを更新
         sheet.getRange(foundIndex, 1, 1, rowData.length).setValues([rowData]);
       } else {
+        // 見つからない場合は新しく追加
         sheet.appendRow(rowData);
       }
 
@@ -84,48 +88,57 @@ function doPost(e) {
 
 // 定期実行(Cron)用関数: 毎分回して通知すべきユーザーを探す
 function checkAndSendPushes() {
+  const startTime = new Date();
   const sheet = getSheet();
-  if (sheet.getLastRow() < 2) return; // データなし
-
-  const values = sheet.getDataRange().getValues();
-  const now = new Date();
+  const lastRow = sheet.getLastRow();
   
-  // GASのタイムゾーン設定(JST)に基づく現在時刻を利用
-  const currentHour = now.getHours();
-  const currentMinute = now.getMinutes();
+  // データなし(ヘッダーのみ)の場合は終了
+  if (lastRow < 2) return;
+
+  // 必要な列(A-I列)のみを取得し、読み取り負荷とメモリ使用量を軽減
+  // Index 0:Endpoint, 1:SubJSON, 2:bHour, 3:bMin, 4:wHour, 5:wMin, 6:bEnabled, 7:wEnabled, 8:Offset
+  const range = sheet.getRange(2, 1, lastRow - 1, 9);
+  const values = range.getValues();
+  
+  const now = new Date();
+  const currentTotalMinutes = now.getHours() * 60 + now.getMinutes();
 
   let bedtimeTargets = [];
   let wakeTargets = [];
 
-  for (let i = 1; i < values.length; i++) {
+  for (let i = 0; i < values.length; i++) {
     const row = values[i];
-    const subJson = JSON.parse(row[1]);
-    const bHour = row[2];
-    const bMin = row[3];
-    const wHour = row[4];
-    const wMin = row[5];
-    const bEnabled = row[6];
-    const wEnabled = row[7];
-    const offset = row[8];
+    try {
+      const subJsonStr = row[1];
+      if (!subJsonStr) continue;
 
-    // 就寝リマインダー判定 (設定時間 - オフセット)
-    if (bEnabled === true || String(bEnabled).toLowerCase() === 'true') {
-      // オフセット分を引いた時間を計算
-      let targetDate = new Date();
-      targetDate.setHours(bHour);
-      targetDate.setMinutes(bMin);
-      targetDate.setMinutes(targetDate.getMinutes() - offset);
-      
-      if (currentHour === targetDate.getHours() && currentMinute === targetDate.getMinutes()) {
-        bedtimeTargets.push(subJson);
-      }
-    }
+      const bHour = Number(row[2]);
+      const bMin = Number(row[3]);
+      const wHour = Number(row[4]);
+      const wMin = Number(row[5]);
+      const bEnabled = row[6] === true || String(row[6]).toLowerCase() === 'true';
+      const wEnabled = row[7] === true || String(row[7]).toLowerCase() === 'true';
+      const offset = Number(row[8] || 0);
 
-    // 起床リマインダー判定
-    if (wEnabled === true || String(wEnabled).toLowerCase() === 'true') {
-      if (currentHour === wHour && currentMinute === wMin) {
-        wakeTargets.push(subJson);
+      // 就寝リマインダー判定 (数値計算で比較し、メモリ消費を抑える)
+      if (bEnabled) {
+        // 設定時間からオフセットを引いた「日の総分量」を計算 (マイナス値考慮)
+        const targetBedtimeMinutes = (bHour * 60 + bMin - offset + 1440) % 1440;
+        if (currentTotalMinutes === targetBedtimeMinutes) {
+          bedtimeTargets.push(JSON.parse(subJsonStr));
+        }
       }
+
+      // 起床リマインダー判定
+      if (wEnabled) {
+        const targetWakeMinutes = (wHour * 60 + wMin) % 1440;
+        if (currentTotalMinutes === targetWakeMinutes) {
+          wakeTargets.push(JSON.parse(subJsonStr));
+        }
+      }
+    } catch (err) {
+      // 特定の行でエラーが起きても全体を止めない
+      console.error('Error processing row ' + (i + 2) + ':', err);
     }
   }
 
@@ -136,6 +149,9 @@ function checkAndSendPushes() {
   if (wakeTargets.length > 0) {
     sendToVercel(wakeTargets, 'おはようございます！', '起床ルーティンを始めましょう ☀️');
   }
+
+  const duration = new Date().getTime() - startTime.getTime();
+  console.log('Execution finished: ' + values.length + ' rows processed in ' + duration + 'ms. Targets found: ' + (bedtimeTargets.length + wakeTargets.length));
 }
 
 function sendToVercel(subscriptions, title, body) {
