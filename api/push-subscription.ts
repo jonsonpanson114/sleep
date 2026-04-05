@@ -1,15 +1,19 @@
-const gasUrl = process.env.VITE_GAS_URL || '';
+const gasUrl = process.env.GAS_URL || process.env.VITE_GAS_URL || '';
 
 export default async function handler(req: any, res: any) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { subscription, settings } = req.body;
+  const { subscription, settings } = req.body ?? {};
 
   if (!gasUrl) {
-    console.error('VITE_GAS_URL is not set');
+    console.error('GAS_URL (or VITE_GAS_URL) is not set');
     return res.status(500).json({ error: 'GAS URL configuration missing' });
+  }
+
+  if (!subscription || typeof subscription !== 'object') {
+    return res.status(400).json({ error: 'Missing or invalid subscription' });
   }
 
   try {

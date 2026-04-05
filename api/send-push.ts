@@ -3,12 +3,25 @@ import webpush from 'web-push';
 const publicKey = process.env.VAPID_PUBLIC_KEY || '';
 const privateKey = process.env.VAPID_PRIVATE_KEY || '';
 
-if (publicKey && privateKey) {
-  webpush.setVapidDetails(
-    'mailto:developer@example.com',
-    publicKey,
-    privateKey
-  );
+let vapidReady = false;
+let vapidConfigError = '';
+
+function ensureVapidConfigured() {
+  if (vapidReady) return;
+  if (!publicKey || !privateKey) {
+    vapidConfigError = 'VAPID keys are not configured on server';
+    return;
+  }
+  try {
+    webpush.setVapidDetails(
+      'mailto:developer@example.com',
+      publicKey,
+      privateKey
+    );
+    vapidReady = true;
+  } catch (error: any) {
+    vapidConfigError = `Invalid VAPID config: ${error?.message || 'unknown error'}`;
+  }
 }
 
 export default async function handler(req: any, res: any) {
@@ -20,6 +33,13 @@ export default async function handler(req: any, res: any) {
 
   if (!subscriptions || !Array.isArray(subscriptions)) {
     return res.status(400).json({ error: 'Missing subscriptions array' });
+  }
+
+  ensureVapidConfigured();
+  if (!vapidReady) {
+    return res.status(500).json({
+      error: vapidConfigError || 'VAPID configuration error',
+    });
   }
 
   try {
@@ -34,9 +54,12 @@ export default async function handler(req: any, res: any) {
 
     const successes = results.filter(r => r.status === 'fulfilled').length;
     
+    const failures = results.length - successes;
     return res.status(200).json({
       ok: true,
       message: `Sent ${successes}/${subscriptions.length} notifications`,
+      successes,
+      failures,
       results: results.map(r => r.status)
     });
   } catch (error) {

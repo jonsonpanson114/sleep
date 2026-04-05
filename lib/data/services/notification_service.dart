@@ -273,7 +273,8 @@ class NotificationService {
             const reg = await navigator.serviceWorker.ready;
             reg.showNotification('テスト通知成功！', {
               body: '新アイコンもいい感じだろ！バイブレーションも設定済みだ。',
-              icon: '/icons/notification_stylish.png',
+              icon: '/icons/notification_stylish.png?v=2',
+              badge: '/icons/badge-monochrome-72.png?v=2',
               vibrate: [200, 100, 200]
             });
           } else {
